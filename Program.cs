@@ -11,7 +11,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {    
     app.UseHttpsRedirection();
-}else
+//app.UseSwagger() and app.UseSwaggerUI() should typically be enabled only in development.In production, these can expose internal API details.
+//Move them inside the development block unless you specifically want Swagger in production.
+
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
+}
+else
 {
     var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
     app.Urls.Add($"http://*:{port}");
