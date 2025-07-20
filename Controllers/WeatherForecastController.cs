@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PFAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     //[Route("[controller]")]
     public class WeatherForecastController : ControllerBase
