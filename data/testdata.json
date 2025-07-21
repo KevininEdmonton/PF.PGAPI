@@ -158,6 +158,201 @@
         "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
       }
     ]
-  }
+  },
+  {
+    "Id": "e1a1c1a1-0001-4000-8000-000000000001",
+    "Name": "Async Programming in C#",
+    "Description": "Best practices and patterns for async/await in C#.",
+    "Category": "Technical",
+    "Icon": "icon-async",
+    "CreatedByUserID": "user1",
+    "CreatedAtUTC": "2025-07-01T08:00:00Z",
+    "LastUpdatedByUserID": "user2",
+    "LastUpdatedAtUTC": "2025-07-10T09:00:00Z",
+    "CommentList": [
+      {
+        "Id": "c1a1c1a1-0001-4000-8000-000000000001",
+        "byUserName": "dev_jane",
+        "Comment": "Great explanation of async pitfalls.",
+        "ParentKTopicId": "e1a1c1a1-0001-4000-8000-000000000001",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "dev_jane",
+        "CreatedAtUTC": "2025-07-01T09:00:00Z",
+        "LastUpdatedByUserID": "dev_jane",
+        "LastUpdatedAtUTC": "2025-07-01T09:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0002-4000-8000-000000000002",
+        "byUserName": "dev_mike",
+        "Comment": "Can you add more on ConfigureAwait?",
+        "ParentKTopicId": "e1a1c1a1-0001-4000-8000-000000000001",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "dev_mike",
+        "CreatedAtUTC": "2025-07-01T10:00:00Z",
+        "LastUpdatedByUserID": "dev_mike",
+        "LastUpdatedAtUTC": "2025-07-01T10:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0003-4000-8000-000000000003",
+        "byUserName": "dev_sara",
+        "Comment": "Async/await is a game changer.",
+        "ParentKTopicId": "e1a1c1a1-0001-4000-8000-000000000001",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "dev_sara",
+        "CreatedAtUTC": "2025-07-01T11:00:00Z",
+        "LastUpdatedByUserID": "dev_sara",
+        "LastUpdatedAtUTC": "2025-07-01T11:00:00Z"
+      }
+    ]
+  },
+  {
+    "Id": "e1a1c1a1-0002-4000-8000-000000000002",
+    "Name": "Sales Funnel Optimization",
+    "Description": "Techniques to improve conversion rates in sales funnels.",
+    "Category": "Sales",
+    "Icon": "icon-sales",
+    "CreatedByUserID": "user2",
+    "CreatedAtUTC": "2025-07-02T08:00:00Z",
+    "LastUpdatedByUserID": "user3",
+    "LastUpdatedAtUTC": "2025-07-11T09:00:00Z",
+    "CommentList": [
+      {
+        "Id": "c1a1c1a1-0004-4000-8000-000000000004",
+        "byUserName": "sales_anna",
+        "Comment": "Very useful for our team.",
+        "ParentKTopicId": "e1a1c1a1-0002-4000-8000-000000000002",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "sales_anna",
+        "CreatedAtUTC": "2025-07-02T09:00:00Z",
+        "LastUpdatedByUserID": "sales_anna",
+        "LastUpdatedAtUTC": "2025-07-02T09:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0005-4000-8000-000000000005",
+        "byUserName": "sales_bob",
+        "Comment": "Can you share more case studies?",
+        "ParentKTopicId": "e1a1c1a1-0002-4000-8000-000000000002",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "sales_bob",
+        "CreatedAtUTC": "2025-07-02T10:00:00Z",
+        "LastUpdatedByUserID": "sales_bob",
+        "LastUpdatedAtUTC": "2025-07-02T10:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0006-4000-8000-000000000006",
+        "byUserName": "sales_cara",
+        "Comment": "Loved the funnel diagram.",
+        "ParentKTopicId": "e1a1c1a1-0002-4000-8000-000000000002",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "sales_cara",
+        "CreatedAtUTC": "2025-07-02T11:00:00Z",
+        "LastUpdatedByUserID": "sales_cara",
+        "LastUpdatedAtUTC": "2025-07-02T11:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0007-4000-8000-000000000007",
+        "byUserName": "sales_dan",
+        "Comment": "What about B2B funnels?",
+        "ParentKTopicId": "e1a1c1a1-0002-4000-8000-000000000002",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "sales_dan",
+        "CreatedAtUTC": "2025-07-02T12:00:00Z",
+        "LastUpdatedByUserID": "sales_dan",
+        "LastUpdatedAtUTC": "2025-07-02T12:00:00Z"
+      }
+    ]
+  },
+  {
+    "Id": "e1a1c1a1-0003-4000-8000-000000000003",
+    "Name": "Remote Team Management",
+    "Description": "Strategies for leading distributed teams.",
+    "Category": "General",
+    "Icon": "icon-remote",
+    "CreatedByUserID": "user3",
+    "CreatedAtUTC": "2025-07-03T08:00:00Z",
+    "LastUpdatedByUserID": "user4",
+    "LastUpdatedAtUTC": "2025-07-12T09:00:00Z",
+    "CommentList": [
+      {
+        "Id": "c1a1c1a1-0008-4000-8000-000000000008",
+        "byUserName": "team_john",
+        "Comment": "Remote work tips are spot on.",
+        "ParentKTopicId": "e1a1c1a1-0003-4000-8000-000000000003",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "team_john",
+        "CreatedAtUTC": "2025-07-03T09:00:00Z",
+        "LastUpdatedByUserID": "team_john",
+        "LastUpdatedAtUTC": "2025-07-03T09:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0009-4000-8000-000000000009",
+        "byUserName": "team_lisa",
+        "Comment": "How do you handle time zones?",
+        "ParentKTopicId": "e1a1c1a1-0003-4000-8000-000000000003",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "team_lisa",
+        "CreatedAtUTC": "2025-07-03T10:00:00Z",
+        "LastUpdatedByUserID": "team_lisa",
+        "LastUpdatedAtUTC": "2025-07-03T10:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0010-4000-8000-000000000010",
+        "byUserName": "team_raj",
+        "Comment": "We use Slack for communication.",
+        "ParentKTopicId": "e1a1c1a1-0003-4000-8000-000000000003",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "team_raj",
+        "CreatedAtUTC": "2025-07-03T11:00:00Z",
+        "LastUpdatedByUserID": "team_raj",
+        "LastUpdatedAtUTC": "2025-07-03T11:00:00Z"
+      }
+    ]
+  },
+  {
+    "Id": "e1a1c1a1-0004-4000-8000-000000000004",
+    "Name": "Email Notification System",
+    "Description": "How to implement notifications using SMTP.",
+    "Category": "Support",
+    "Icon": "icon-email",
+    "CreatedByUserID": "user4",
+    "CreatedAtUTC": "2025-07-04T08:00:00Z",
+    "LastUpdatedByUserID": "user5",
+    "LastUpdatedAtUTC": "2025-07-13T09:00:00Z",
+    "CommentList": [
+      {
+        "Id": "c1a1c1a1-0011-4000-8000-000000000011",
+        "byUserName": "support_amy",
+        "Comment": "SMTP setup was easy to follow.",
+        "ParentKTopicId": "e1a1c1a1-0004-4000-8000-000000000004",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "support_amy",
+        "CreatedAtUTC": "2025-07-04T09:00:00Z",
+        "LastUpdatedByUserID": "support_amy",
+        "LastUpdatedAtUTC": "2025-07-04T09:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0012-4000-8000-000000000012",
+        "byUserName": "support_ben",
+        "Comment": "Can you add troubleshooting tips?",
+        "ParentKTopicId": "e1a1c1a1-0004-4000-8000-000000000004",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "support_ben",
+        "CreatedAtUTC": "2025-07-04T10:00:00Z",
+        "LastUpdatedByUserID": "support_ben",
+        "LastUpdatedAtUTC": "2025-07-04T10:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0013-4000-8000-000000000013",
+        "byUserName": "support_cara",
+        "Comment": "What about HTML emails?",
+        "ParentKTopicId": "e1a1c1a1-0004-4000-8000-000000000004",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "support_cara",
+        "CreatedAtUTC": "2025-07-04T11:00:00Z",
+        "LastUpdatedByUserID": "support_cara",
+        "LastUpdatedAtUTC": "2025-07-04T11:00:00Z"
+      }
+    ]
+  }  
 ]
 

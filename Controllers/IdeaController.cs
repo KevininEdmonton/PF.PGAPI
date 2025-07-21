@@ -8,10 +8,10 @@ namespace PFAPI.Controllers
     public class IdeaController : ControllerBase
     {
         private readonly ILogger<IdeaController> _logger;
-        private readonly IConfigurationRoot _config;
+        private readonly IConfiguration _config;
 
         public IdeaController(ILogger<IdeaController> logger
-                                , IConfigurationRoot config
+                                , IConfiguration config
                                 )
         {
             _logger = logger;

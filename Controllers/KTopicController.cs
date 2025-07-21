@@ -19,13 +19,13 @@ namespace PFAPI.Controllers
        // private readonly IMapper _mapper;
      //   private readonly LinkGenerator _linkGenerator;
         private ILogger<KTopicController> _logger;
-        private IConfigurationRoot _config;
+        private IConfiguration _config;
         private string _curDataModelName = "KTopic";
 
         public KTopicController(
             //IHoBOCenterRepository repository, IMapper mapper
                                        ILogger<KTopicController> logger//, LinkGenerator linkGenerator
-                                      , IConfigurationRoot config)
+                                      , IConfiguration config)
         {
             //_repository = repository;
             //_mapper = mapper;
