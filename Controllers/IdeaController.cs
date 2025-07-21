@@ -7,8 +7,8 @@ namespace PFAPI.Controllers
     [ApiController]
     public class IdeaController : ControllerBase
     {
-        private ILogger<IdeaController> _logger;
-        private IConfigurationRoot _config;
+        private readonly ILogger<IdeaController> _logger;
+        private readonly IConfigurationRoot _config;
 
         public IdeaController(ILogger<IdeaController> logger
                                 , IConfigurationRoot config

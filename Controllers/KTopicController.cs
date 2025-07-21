@@ -112,49 +112,49 @@ namespace PFAPI.Controllers
         }
 
 
-        /// <summary>
-        /// Get one KTopic Model
-        /// </summary>
-        /// <param name="id">KTopic ID</param>
-        /// <param name="qp_includeallchildrendata">Whether get all children data</param>
-        /// <param name="qp_includedata">Specific children data that need to be get; one level lower only; split by [,]</param>
-        /// <returns>An ActionResult of existing KTopic Model</returns>
-        [Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
-        [HttpGet("{id}", Name = SystemStatics.Route_GetOne_KTopic)]
-        //[Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        ///// <summary>
+        ///// Get one KTopic Model
+        ///// </summary>
+        ///// <param name="id">KTopic ID</param>
+        ///// <param name="qp_includeallchildrendata">Whether get all children data</param>
+        ///// <param name="qp_includedata">Specific children data that need to be get; one level lower only; split by [,]</param>
+        ///// <returns>An ActionResult of existing KTopic Model</returns>
+        //[Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
+        //[HttpGet("{id}", Name = SystemStatics.Route_GetOne_KTopic)]
+        ////[Consumes("application/json")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public async Task<ActionResult<KTopicModel>> Get(Guid id, bool qp_includeallchildrendata = PFAPIStatics.SYS_Default_QP_IncludeAllChildrenData
-                                                                , string qp_includedata = PFAPIStatics.SYS_Default_QP_IncludeData)
-        {
-            try
-            {
-                QueryParameterMin theQueryParameter = new QueryParameterMin(qp_includeallchildrendata, qp_includedata);
+        //public async Task<ActionResult<KTopicModel>> Get(Guid id, bool qp_includeallchildrendata = PFAPIStatics.SYS_Default_QP_IncludeAllChildrenData
+        //                                                        , string qp_includedata = PFAPIStatics.SYS_Default_QP_IncludeData)
+        //{
+        //    try
+        //    {
+        //        QueryParameterMin theQueryParameter = new QueryParameterMin(qp_includeallchildrendata, qp_includedata);
 
-                return NotFound();
+        //        return NotFound();
 
-                //// work with Client Database
-                //using (IHoBOClientRepository _repository_clientdb = HoBOClientRepository.CreateRepositoryInstance(User, _config, _mapper))
-                //{
-                //    IQueryable<KTopic> theQuery = _repository_clientdb.GetQueryable<KTopic>();
-                //    theQuery = theQuery.Where(o => o.Id == id);
+        //        //// work with Client Database
+        //        //using (IHoBOClientRepository _repository_clientdb = HoBOClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+        //        //{
+        //        //    IQueryable<KTopic> theQuery = _repository_clientdb.GetQueryable<KTopic>();
+        //        //    theQuery = theQuery.Where(o => o.Id == id);
 
-                //    KTopicModel theDataModel = await _repository_clientdb.GetOneDataModel<KTopic, KTopicModel>(theQueryParameter, theQuery);
-                //    if (theDataModel == null)
-                //        return NotFound();
+        //        //    KTopicModel theDataModel = await _repository_clientdb.GetOneDataModel<KTopic, KTopicModel>(theQueryParameter, theQuery);
+        //        //    if (theDataModel == null)
+        //        //        return NotFound();
 
-                //    return Ok(theDataModel);
-                //}
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
-            }
-        }
+        //        //    return Ok(theDataModel);
+        //        //}
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
+        //        return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
+        //    }
+        //}
 
 
      //   /// <summary>
