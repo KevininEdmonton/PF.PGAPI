@@ -13,24 +13,24 @@ namespace PFAPI.Controllers
     [Produces("application/json")]
    // [ApiVersion("1.0")]
     [ApiController]   
-    public class KTopicController : BaseController
+    public class KTopicController : ControllerBase
     {
         //private readonly IHoBOCenterRepository _repository;
        // private readonly IMapper _mapper;
-        private readonly LinkGenerator _linkGenerator;
+     //   private readonly LinkGenerator _linkGenerator;
         private ILogger<KTopicController> _logger;
         private IConfigurationRoot _config;
         private string _curDataModelName = "KTopic";
 
         public KTopicController(
             //IHoBOCenterRepository repository, IMapper mapper
-                                       ILogger<KTopicController> logger, LinkGenerator linkGenerator
+                                       ILogger<KTopicController> logger//, LinkGenerator linkGenerator
                                       , IConfigurationRoot config)
         {
             //_repository = repository;
             //_mapper = mapper;
             _logger = logger;
-            _linkGenerator = linkGenerator;
+           // _linkGenerator = linkGenerator;
             _config = config;
         }
 
@@ -134,7 +134,7 @@ namespace PFAPI.Controllers
             {
                 QueryParameterMin theQueryParameter = new QueryParameterMin(qp_includeallchildrendata, qp_includedata);
 
-                return Ok();
+                return NotFound();
 
                 //// work with Client Database
                 //using (IHoBOClientRepository _repository_clientdb = HoBOClientRepository.CreateRepositoryInstance(User, _config, _mapper))
