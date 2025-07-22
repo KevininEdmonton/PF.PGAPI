@@ -46,7 +46,7 @@ namespace PFAPI.utility
 
         public const string SYS_Default_QP_IncludeData = "";
 
-        public const string SYS_Default_QP_Orderby = "CreatedAtUtc descending";
+        public const string SYS_Default_QP_Orderby = "";
 
         public const int SYS_Default_QP_Page = 1;
 

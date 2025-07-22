@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DomainRepository.IRepositories;
+using DomainRepository.Repositories;
 using K.Common;
+using KS.Library.EFDB;
 using KS.Library.Interface.PFAPI.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +15,7 @@ namespace PFAPI.Controllers
 
     [Route("[controller]")]
     [Produces("application/json")]
-   // [ApiVersion("1.0")]
+    [ApiVersion("1.0")]
     [ApiController]   
     public class KTopicController : ControllerBase
     {
@@ -24,13 +26,11 @@ namespace PFAPI.Controllers
         private IConfiguration _config;
         private string _curDataModelName = "KTopic";
 
-        public KTopicController(
-            //IPFClientRepository repository, IMapper mapper
-                                       ILogger<KTopicController> logger//, LinkGenerator linkGenerator
+        public KTopicController(IMapper mapper, ILogger<KTopicController> logger//, LinkGenerator linkGenerator
                                       , IConfiguration config)
         {
             //_repository = repository;
-            //_mapper = mapper;
+            _mapper = mapper;
             _logger = logger;
            // _linkGenerator = linkGenerator;
             _config = config;
@@ -61,49 +61,57 @@ namespace PFAPI.Controllers
             {
                 QueryParameter theQueryParameter = new QueryParameter(qp_page, qp_pagesize, qp_orderby, qp_includeallchildrendata, qp_includedata, qp_filter
                                                                       , Url.Link(SystemStatics.Route_GetAll_KTopic, null));
-
-                int thePageSize = theQueryParameter.pagesize;
-                if(thePageSize<1 || thePageSize>100)
+                //CreateRepositoryInstance(User, _config, _mapper)
+                using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
                 {
-                    thePageSize = PFAPIStatics.SYS_Default_QP_Pagesize;
+                    var theResult = await _repository_clientdb.CreatePagedResults<Ktopic, KTopicModel>(theQueryParameter);
+                    return Ok(theResult);
                 }
 
-                //// work with Client Database
-                //using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+
+
+                //int thePageSize = theQueryParameter.pagesize;
+                //if(thePageSize<1 || thePageSize>100)
                 //{
-                //    var theResult = await _repository_clientdb.CreatePagedResults<KTopic, KTopicModel>(theQueryParameter);
-                //    return Ok(theResult);
+                //    thePageSize = PFAPIStatics.SYS_Default_QP_Pagesize;
                 //}
 
-                List<KTopicModel> topics = DataHelper.LoadKTopicsFromJson();
-                if (!topics.HasData() )
-                {
-                    return NotFound("No KTopic data found.");
-                }
-                List<KTopicModel> validtopics = new List<KTopicModel>();
-                if (topics.Count > thePageSize)
-                {   // Filter topics based on the page size
-                    validtopics = topics.OrderBy(d=>d.Name).ToList().Skip((theQueryParameter.page - 1) * thePageSize)
-                                        .Take(thePageSize)
-                                        .ToList();
-                }
-                else
-                {
-                    validtopics = topics;
-                }
+                ////// work with Client Database
+                ////using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+                ////{
+                ////    var theResult = await _repository_clientdb.CreatePagedResults<KTopic, KTopicModel>(theQueryParameter);
+                ////    return Ok(theResult);
+                ////}
+
+                //List<KTopicModel> topics = DataHelper.LoadKTopicsFromJson();
+                //if (!topics.HasData() )
+                //{
+                //    return NotFound("No KTopic data found.");
+                //}
+                //List<KTopicModel> validtopics = new List<KTopicModel>();
+                //if (topics.Count > thePageSize)
+                //{   // Filter topics based on the page size
+                //    validtopics = topics.OrderBy(d=>d.Name).ToList().Skip((theQueryParameter.page - 1) * thePageSize)
+                //                        .Take(thePageSize)
+                //                        .ToList();
+                //}
+                //else
+                //{
+                //    validtopics = topics;
+                //}
 
 
-                PagedData<KTopicModel> result = new PagedData<KTopicModel>
-                {
-                    Data = validtopics,
-                    PageNum = theQueryParameter.page,
-                    PageSize = thePageSize,
-                    RecordsCount = topics.Count,
-                    PagesCount = (int)Math.Ceiling((double)topics.Count / theQueryParameter.pagesize),
-                    OrderBy = theQueryParameter.orderby,
-                };
+                //PagedData<KTopicModel> result = new PagedData<KTopicModel>
+                //{
+                //    Data = validtopics,
+                //    PageNum = theQueryParameter.page,
+                //    PageSize = thePageSize,
+                //    RecordsCount = topics.Count,
+                //    PagesCount = (int)Math.Ceiling((double)topics.Count / theQueryParameter.pagesize),
+                //    OrderBy = theQueryParameter.orderby,
+                //};
 
-                return Ok(result);
+                //return Ok(result);
 
             }
             catch (Exception e)
