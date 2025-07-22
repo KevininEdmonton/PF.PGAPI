@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DomainRepository.IRepositories;
+using DomainRepository.Mapping;
 using DomainRepository.Repositories;
 using K.Common;
 using KS.Library.EFDB;
@@ -24,7 +25,7 @@ namespace PFAPI.Controllers
         //   private readonly LinkGenerator _linkGenerator;
         private ILogger<KTopicController> _logger;
         private IConfiguration _config;
-        private string _curDataModelName = "KTopic";
+        private string _curDataModelName = "Ktopic";
 
         public KTopicController(IMapper mapper, ILogger<KTopicController> logger//, LinkGenerator linkGenerator
                                       , IConfiguration config)
@@ -37,7 +38,7 @@ namespace PFAPI.Controllers
         }
 
         /// <summary>
-        /// Get a list of KTopic Model
+        /// Get a list of Ktopic Model
         /// </summary>
         /// <param name="qp_page">Page number</param>
         /// <param name="qp_pagesize">Page size</param>
@@ -45,7 +46,7 @@ namespace PFAPI.Controllers
         /// <param name="qp_includeallchildrendata">Whether get all children data</param>
         /// <param name="qp_includedata">Specific children data that need to be get; one level lower only; split by [,]</param>
         /// <param name="qp_filter">Filter condition</param>
-        /// <returns>An ActionResult of PagedData for existing KTopic Models</returns>
+        /// <returns>An ActionResult of PagedData for existing Ktopic Models</returns>
        // [Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
         [HttpGet(Name = SystemStatics.Route_GetAll_KTopic)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -67,52 +68,48 @@ namespace PFAPI.Controllers
                     var theResult = await _repository_clientdb.CreatePagedResults<Ktopic, KTopicModel>(theQueryParameter);
                     return Ok(theResult);
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
+            }
+        }
 
+        /// <summary>
+        /// Get one Ktopic Model
+        /// </summary>
+        /// <param name="id">Ktopic ID</param>
+        /// <param name="qp_includeallchildrendata">Whether get all children data</param>
+        /// <param name="qp_includedata">Specific children data that need to be get; one level lower only; split by [,]</param>
+        /// <returns>An ActionResult of existing Ktopic Model</returns>
+       // [Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
+        [HttpGet("{id}", Name = SystemStatics.Route_GetOne_KTopic)]
+        //[Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
+        public async Task<ActionResult<KTopicModel>> Get(Guid id, bool qp_includeallchildrendata = PFAPIStatics.SYS_Default_QP_IncludeAllChildrenData
+                                                                , string qp_includedata = PFAPIStatics.SYS_Default_QP_IncludeData)
+        {
+            try
+            {
+                QueryParameterMin theQueryParameter = new QueryParameterMin(qp_includeallchildrendata, qp_includedata);
 
-                //int thePageSize = theQueryParameter.pagesize;
-                //if(thePageSize<1 || thePageSize>100)
-                //{
-                //    thePageSize = PFAPIStatics.SYS_Default_QP_Pagesize;
-                //}
+                // work with Client Database
+                using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
+                {
+                    IQueryable<Ktopic> theQuery = _repository_clientdb.GetQueryable<Ktopic>();
+                    theQuery = theQuery.Where(o => o.Id == id);
 
-                ////// work with Client Database
-                ////using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
-                ////{
-                ////    var theResult = await _repository_clientdb.CreatePagedResults<KTopic, KTopicModel>(theQueryParameter);
-                ////    return Ok(theResult);
-                ////}
+                    KTopicModel theDataModel = await _repository_clientdb.GetOneDataModel<Ktopic, KTopicModel>(theQueryParameter, theQuery);
+                    if (theDataModel == null)
+                        return NotFound();
 
-                //List<KTopicModel> topics = DataHelper.LoadKTopicsFromJson();
-                //if (!topics.HasData() )
-                //{
-                //    return NotFound("No KTopic data found.");
-                //}
-                //List<KTopicModel> validtopics = new List<KTopicModel>();
-                //if (topics.Count > thePageSize)
-                //{   // Filter topics based on the page size
-                //    validtopics = topics.OrderBy(d=>d.Name).ToList().Skip((theQueryParameter.page - 1) * thePageSize)
-                //                        .Take(thePageSize)
-                //                        .ToList();
-                //}
-                //else
-                //{
-                //    validtopics = topics;
-                //}
-
-
-                //PagedData<KTopicModel> result = new PagedData<KTopicModel>
-                //{
-                //    Data = validtopics,
-                //    PageNum = theQueryParameter.page,
-                //    PageSize = thePageSize,
-                //    RecordsCount = topics.Count,
-                //    PagesCount = (int)Math.Ceiling((double)topics.Count / theQueryParameter.pagesize),
-                //    OrderBy = theQueryParameter.orderby,
-                //};
-
-                //return Ok(result);
-
+                    return Ok(theDataModel);
+                }
             }
             catch (Exception e)
             {
@@ -122,227 +119,185 @@ namespace PFAPI.Controllers
         }
 
 
-        ///// <summary>
-        ///// Get one KTopic Model
-        ///// </summary>
-        ///// <param name="id">KTopic ID</param>
-        ///// <param name="qp_includeallchildrendata">Whether get all children data</param>
-        ///// <param name="qp_includedata">Specific children data that need to be get; one level lower only; split by [,]</param>
-        ///// <returns>An ActionResult of existing KTopic Model</returns>
-        //[Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
-        //[HttpGet("{id}", Name = SystemStatics.Route_GetOne_KTopic)]
-        ////[Consumes("application/json")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        /// <summary>
+        /// Create a new Ktopic Model
+        /// </summary>
+        /// <param name="model">Ktopic Model to be created</param>
+        /// <returns>An ActionResult of newly created Ktopic Model</returns>
+        /// <remarks>
+        /// Sample request:
+        ///     POST                         \
+        ///     {                            \
+        ///        "name": "Item1",          \
+        ///        "code": "example code"    \
+        ///     }                            
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the request/data is not valid</response>       
+        /// <response code="500">If error happened at server side</response>
+        /// <response code="422">If the provided data is not valid</response>               
+     //   [Authorize(Policy4ModuleOperations.P_Sales.SalesTaxRateManageOperation)]
+        [HttpPost]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity,
+            Type = typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary))]
+        public async Task<ActionResult<KTopicModel>> Post(KTopicModel model)
+        {
+            try
+            {
+                // using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+                using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
+                {
+                    //Verify DB constraints
+                    if (!VerificationHelper.VerifyDBconstraints(_repository_clientdb, model, out string msg))
+                    {
+                        return BadRequest(msg);
+                    }
 
-        //public async Task<ActionResult<KTopicModel>> Get(Guid id, bool qp_includeallchildrendata = PFAPIStatics.SYS_Default_QP_IncludeAllChildrenData
-        //                                                        , string qp_includedata = PFAPIStatics.SYS_Default_QP_IncludeData)
-        //{
-        //    try
-        //    {
-        //        QueryParameterMin theQueryParameter = new QueryParameterMin(qp_includeallchildrendata, qp_includedata);
+                    // Name should be Unique
+                    //if (_repository_clientdb.GetExists<Ktopic>($"Name=='{model.Name}'"))
+                    //{
+                    //    return BadRequest($"Name [{model.Name}] is in Use;");
+                    //}
 
-        //        return NotFound();
+                    // Create new 
+                    model.Id = Guid.Empty;
+                    Ktopic entity = await MappingHelper.StarndardMap<KTopicModel, Ktopic>(_repository_clientdb, _mapper, model, Guid.Empty);
 
-        //        //// work with Client Database
-        //        //using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
-        //        //{
-        //        //    IQueryable<KTopic> theQuery = _repository_clientdb.GetQueryable<KTopic>();
-        //        //    theQuery = theQuery.Where(o => o.Id == id);
+                    //regular operation
+                    _repository_clientdb.Create(entity);
+                    if (!await _repository_clientdb.SaveChangesAsync(this.User))
+                    {
+                        return this.StatusCode(StatusCodes.Status500InternalServerError, null);
+                    }
 
-        //        //    KTopicModel theDataModel = await _repository_clientdb.GetOneDataModel<KTopic, KTopicModel>(theQueryParameter, theQuery);
-        //        //    if (theDataModel == null)
-        //        //        return NotFound();
+                    var newUri = Url.Link(SystemStatics.Route_GetOne_KTopic, new { id = entity.Id });
+                    return Created(newUri, _mapper.Map<KTopicModel>(entity));
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
+            }
+        }
 
-        //        //    return Ok(theDataModel);
-        //        //}
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
-        //        return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
-        //    }
-        //}
+        /// <summary>
+        /// Update a existing Ktopic Model
+        /// </summary>
+        /// <param name="id">Ktopic ID</param>
+        /// <param name="model">Ktopic Model to be updated</param>
+        /// <returns>An ActionResult of updated Ktopic Model</returns>
+        ////[HttpPatch("{id}")]
+        //  [Authorize(Policy4ModuleOperations.P_Sales.SalesTaxRateManageOperation)]
+        [HttpPut("{id}")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity,
+            Type = typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary))]
+        public async Task<ActionResult<KTopicModel>> Put(Guid id, KTopicModel model)
+        {
+            try
+            {
+                // using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+                using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
+                {
+                    var existingentity = _repository_clientdb.GetById<Ktopic>(id);
+                    if (existingentity == null) return NotFound($"Could not find {_curDataModelName} with id of {id}");
 
+                    if (model.Id != id)
+                        model.Id = id;
 
-     //   /// <summary>
-     //   /// Create a new KTopic Model
-     //   /// </summary>
-     //   /// <param name="model">KTopic Model to be created</param>
-     //   /// <returns>An ActionResult of newly created KTopic Model</returns>
-     //   /// <remarks>
-     //   /// Sample request:
-     //   ///     POST                         \
-     //   ///     {                            \
-     //   ///        "name": "Item1",          \
-     //   ///        "code": "example code"    \
-     //   ///     }                            
-     //   /// </remarks>
-     //   /// <response code="201">Returns the newly created item</response>
-     //   /// <response code="400">If the request/data is not valid</response>       
-     //   /// <response code="500">If error happened at server side</response>
-     //   /// <response code="422">If the provided data is not valid</response>               
-     ////   [Authorize(Policy4ModuleOperations.P_Sales.SalesTaxRateManageOperation)]
-     //   [HttpPost]
-     //   [Consumes("application/json")]
-     //   [ProducesResponseType(StatusCodes.Status200OK)]
-     //   [ProducesResponseType(StatusCodes.Status201Created)]
-     //   [ProducesResponseType(StatusCodes.Status400BadRequest)]
-     //   [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-     //   [ProducesResponseType(StatusCodes.Status422UnprocessableEntity,
-     //       Type = typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary))]
-     //   public async Task<ActionResult<KTopicModel>> Post(KTopicModel model)
-     //   {
-     //       try
-     //       {
-     //           using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
-     //           {
-     //               //Verify DB constraints
-     //               if (!VerificationHelper.VerifyDBconstraints(_repository_clientdb, model, out string msg))
-     //               {
-     //                   return BadRequest(msg);
-     //               }
+                    //// Name should be Unique
+                    //if (_repository_clientdb.GetExists<Ktopic>($"Name=='{model.Name}' and ID != GUID('{model.Id}')"))
+                    //{
+                    //    return BadRequest($"Name [{model.Name}] is in Use;");
+                    //}
 
-     //               // Name should be Unique
-     //               if (_repository_clientdb.GetExists<KTopic>($"Name=='{model.Name}'"))
-     //               {
-     //                   return BadRequest($"Name [{model.Name}] is in Use;");
-     //               }
+                    //Verify DB constraints
+                    if (!VerificationHelper.VerifyDBconstraints(_repository_clientdb, model, out string msg))
+                    {
+                        return BadRequest(msg);
+                    }
 
-     //               // Create new 
-     //               model.ID = Guid.Empty;
-     //               KTopic entity = await MappingHelper.MaptoEntity(_repository_clientdb, _mapper, model);
+                    existingentity = await MappingHelper.StarndardMap<KTopicModel, Ktopic>(_repository_clientdb, _mapper, model, id);
+                    if (existingentity == null) return BadRequest($"Failed to map {_curDataModelName} with id of {id}");
 
-     //               //regular operation
-     //               _repository_clientdb.Create(entity);
-     //               if (!await _repository_clientdb.SaveChangesAsync(this.User))
-     //               {
-     //                   return this.StatusCode(StatusCodes.Status500InternalServerError, null);
-     //               }
+                    if (!_repository_clientdb.HasChangesToDB())
+                    {
+                        if (_config["ValidationCheckOptions:Apply200ForNotModifiedRecord"].MeaningTrue())
+                        {
+                            return _mapper.Map<KTopicModel>(existingentity);
+                        }
+                        else
+                        {
+                            return this.StatusCode(StatusCodes.Status304NotModified);
+                        }
+                    }
+                    if (await _repository_clientdb.SaveChangesAsync(this.User))
+                    {
+                        return Ok(_mapper.Map<KTopicModel>(existingentity));
+                    }
+                    return StatusCode(StatusCodes.Status304NotModified, model);
+                }
+            }
+            catch (FormatException e)
+            {
+                _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
+            }
+        }
 
-     //               var newUri = Url.Link(SystemStatics.Route_GetOne_KTopic, new { id = entity.Id });
-     //               return Created(newUri, _mapper.Map<KTopicModel>(entity));
-     //           }
-     //       }
-     //       catch (Exception e)
-     //       {
-     //           _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
-     //           return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
-     //       }
-     //   }
+        /// <summary>
+        /// Delete a existing Ktopic Model
+        /// </summary>
+        /// <param name="id">Ktopic ID</param>
+        /// <returns>An ActionResult</returns>
+       // [Authorize(Policy4ModuleOperations.P_Sales.SalesTaxRateManageOperation)]
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                // using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+                using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
+                {
+                    var existingentity = _repository_clientdb.GetById<Ktopic>(id);
+                    if (existingentity == null) return NotFound($"Could not find {_curDataModelName} with id of {id}");
 
-     //   /// <summary>
-     //   /// Update a existing KTopic Model
-     //   /// </summary>
-     //   /// <param name="id">KTopic ID</param>
-     //   /// <param name="model">KTopic Model to be updated</param>
-     //   /// <returns>An ActionResult of updated KTopic Model</returns>
-     //   ////[HttpPatch("{id}")]
-     // //  [Authorize(Policy4ModuleOperations.P_Sales.SalesTaxRateManageOperation)]
-     //   [HttpPut("{id}")]
-     //   [Consumes("application/json")]
-     //   [ProducesResponseType(StatusCodes.Status200OK)]
-     //   [ProducesResponseType(StatusCodes.Status304NotModified)]
-     //   [ProducesResponseType(StatusCodes.Status404NotFound)]
-     //   [ProducesResponseType(StatusCodes.Status400BadRequest)]
-     //   [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-     //   [ProducesResponseType(StatusCodes.Status422UnprocessableEntity,
-     //       Type = typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary))]
-     //   public async Task<ActionResult<KTopicModel>> Put(Guid id, KTopicModel model)
-     //   {
-     //       try
-     //       {
-     //           using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
-     //           {
-     //               var existingentity = _repository_clientdb.GetById<KTopic>(id);
-     //               if (existingentity == null) return NotFound($"Could not find {_curDataModelName} with id of {id}");
+                    //delete schedule control
+                    _repository_clientdb.Delete(existingentity);
+                    if (!await _repository_clientdb.SaveChangesAsync(this.User))
+                    {
+                        _logger.LogWarning($"Failed to delete {_curDataModelName} with id of {id}");
+                        return this.StatusCode(StatusCodes.Status500InternalServerError, $"Failed to delete {_curDataModelName} with id of {id}");
+                    }
 
-     //               if (model.ID != id)
-     //                   model.ID = id;
-
-     //               // Name should be Unique
-     //               if (_repository_clientdb.GetExists<KTopic>($"Name=='{model.Name}' and ID != GUID('{model.ID}')"))
-     //               {
-     //                   return BadRequest($"Name [{model.Name}] is in Use;");
-     //               }
-
-     //               //Verify DB constraints
-     //               if (!VerificationHelper.VerifyDBconstraints(_repository_clientdb, model, out string msg))
-     //               {
-     //                   return BadRequest(msg);
-     //               }
-
-     //               existingentity = await MappingHelper.MaptoEntity(_repository_clientdb, _mapper, model);
-     //               if (existingentity == null) return BadRequest($"Failed to map {_curDataModelName} with id of {id}");
-
-     //               if (!_repository_clientdb.HasChangesToDB())
-     //               {
-     //                   if (_config["ValidationCheckOptions:Apply200ForNotModifiedRecord"].MeaningTrue())
-     //                   {
-     //                       return _mapper.Map<KTopicModel>(existingentity);
-     //                   }
-     //                   else
-     //                   {
-     //                       return this.StatusCode(StatusCodes.Status304NotModified);
-     //                   }
-     //               }
-     //               if (await _repository_clientdb.SaveChangesAsync(this.User))
-     //               {
-     //                   return Ok(_mapper.Map<KTopicModel>(existingentity));
-     //               }
-     //               return StatusCode(StatusCodes.Status304NotModified, model);
-     //           }
-     //       }
-     //       catch (FormatException e)
-     //       {
-     //           _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
-     //           return BadRequest(e.Message);
-     //       }
-     //       catch (Exception e)
-     //       {
-     //           _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
-     //           return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
-     //       }
-     //   }
-
-     //   /// <summary>
-     //   /// Delete a existing KTopic Model
-     //   /// </summary>
-     //   /// <param name="id">KTopic ID</param>
-     //   /// <returns>An ActionResult</returns>
-     //  // [Authorize(Policy4ModuleOperations.P_Sales.SalesTaxRateManageOperation)]
-     //   [HttpDelete("{id}")]
-     //   [ProducesResponseType(StatusCodes.Status200OK)]
-     //   [ProducesResponseType(StatusCodes.Status400BadRequest)]
-     //   [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-     //   [ProducesResponseType(StatusCodes.Status404NotFound)]
-     //   public async Task<IActionResult> Delete(Guid id)
-     //   {
-     //       try
-     //       {
-     //           using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
-     //           {
-     //               var existingentity = _repository_clientdb.GetById<KTopic>(id);
-     //               if (existingentity == null) return NotFound($"Could not find {_curDataModelName} with id of {id}");
-
-     //               //delete schedule control
-     //               _repository_clientdb.Delete(existingentity);
-     //               if (!await _repository_clientdb.SaveChangesAsync(this.User))
-     //               {
-     //                   _logger.LogWarning($"Failed to delete {_curDataModelName} with id of {id}");
-     //                   return this.StatusCode(StatusCodes.Status500InternalServerError, $"Failed to delete {_curDataModelName} with id of {id}");
-     //               }
-
-     //               return Ok();
-     //           }
-     //       }
-     //       catch (Exception e)
-     //       {
-     //           _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
-     //           return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
-     //       }
-     //   }
+                    return Ok();
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(LoggingEvents.Other, e, "Exception thrown;", this.User);
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
+            }
+        }
     }
 }
