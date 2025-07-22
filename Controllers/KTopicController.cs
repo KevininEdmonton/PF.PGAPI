@@ -83,7 +83,7 @@ namespace PFAPI.Controllers
         /// <param name="qp_includeallchildrendata">Whether get all children data</param>
         /// <param name="qp_includedata">Specific children data that need to be get; one level lower only; split by [,]</param>
         /// <returns>An ActionResult of existing Ktopic Model</returns>
-       // [Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
+        [Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
         [HttpGet("{id}", Name = SystemStatics.Route_GetOne_KTopic)]
         //[Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -136,7 +136,7 @@ namespace PFAPI.Controllers
         /// <response code="400">If the request/data is not valid</response>       
         /// <response code="500">If error happened at server side</response>
         /// <response code="422">If the provided data is not valid</response>               
-     //   [Authorize(Policy4ModuleOperations.P_Sales.SalesTaxRateManageOperation)]
+        [Authorize(Policy4ModuleOperations.P_Admin.AdminManageOperation)]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -193,7 +193,7 @@ namespace PFAPI.Controllers
         /// <param name="model">Ktopic Model to be updated</param>
         /// <returns>An ActionResult of updated Ktopic Model</returns>
         ////[HttpPatch("{id}")]
-        //  [Authorize(Policy4ModuleOperations.P_Sales.SalesTaxRateManageOperation)]
+        [Authorize(Policy4ModuleOperations.P_Admin.AdminManageOperation)]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -266,7 +266,7 @@ namespace PFAPI.Controllers
         /// </summary>
         /// <param name="id">Ktopic ID</param>
         /// <returns>An ActionResult</returns>
-       // [Authorize(Policy4ModuleOperations.P_Sales.SalesTaxRateManageOperation)]
+        [Authorize(Policy4ModuleOperations.P_Admin.AdminManageOperation)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
