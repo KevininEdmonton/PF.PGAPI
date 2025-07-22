@@ -181,6 +181,10 @@ namespace DomainRepository.Repositories
                     return (queryable as IQueryable<Ktopic>)
                                 .Include(c => c.KtopicComments)
                                  as IQueryable<T>;
+                case "ZclientUser":
+                    return (queryable as IQueryable<ZclientUser>)
+                                .Include(c => c.ZclientUserRefreshTokens)
+                                 as IQueryable<T>;
 
             }
             return queryable;
@@ -190,6 +194,21 @@ namespace DomainRepository.Repositories
         {
             WebAPIExtentions.AddAuitInfo(_context, theUser.GetClaimValue(JwtRegisteredClaimNames.Sid), _config["Application:AppName"]);
             return HasChangesToDB();
+        }
+
+        public async Task<ZclientUser> GetZClientUserByUserNameAsync(string username, bool includeChildrendata = false)
+        {
+            //_logger.LogInformation($"Getting a Camp for {moniker}");
+            IQueryable<ZclientUser> query = GetQuery_ZClientUser(includeChildrendata);
+            query = query.Where(c => c.UserName.ToLower() == username.Trim().ToLower());
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        private IQueryable<ZclientUser> GetQuery_ZClientUser(bool includeChildrendata)
+        {
+            IQueryable<ZclientUser> query = _context.ZclientUsers;
+            return AddChildDataIncludeQuery(query);
         }
 
     }

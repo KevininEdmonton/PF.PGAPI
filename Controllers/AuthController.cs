@@ -1,14 +1,21 @@
-﻿using System;
+﻿using AutoMapper;
+using DomainRepository.IRepositories;
+using DomainRepository.Repositories;
+using K.Common;
+using KS.Library.Interface.PFAPI;
+using KS.Library.Interface.PFAPI.Domain.Auth;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.IdentityModel.Tokens;
+using PFAPI.utility;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using KS.Library.Interface.PFAPI;
-using K.Common;
 
 namespace PFAPI.Controllers
 {
@@ -18,33 +25,83 @@ namespace PFAPI.Controllers
     [ApiController]   
     public class AuthController : ControllerBase
     {
-        //private UserManager<AppUser> _userMgr;
-        //private IPasswordHasher<AppUser> _hasher;
+        private readonly IMapper _mapper;
+        private ILogger<AuthController> _logger;
+        private IConfiguration _config;
+        private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
+        private string errStr;
 
-        //private readonly IHoBOCenterRepository _repository;
-        //private readonly IMapper _mapper;
-        //private ILogger<AuthController> _logger;
-        //private IConfigurationRoot _config;
-        //private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
-        //private string errStr;
+        public AuthController(ILogger<AuthController> logger                                        
+                                        //, IPasswordHasher<AppUser> hasher
+                                        , IConfiguration config
+                                        , IMapper mapper
+                                        )
+        {
+            _logger = logger;
+            _config = config;
+            _mapper = mapper;
+            if (_jwtSecurityTokenHandler == null)
+                _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+        }
 
-        //public AuthController(IHoBOCenterRepository repository, ILogger<AuthController> logger
-        //                                , UserManager<AppUser> userMgr
-        //                                , IPasswordHasher<AppUser> hasher
-        //                                , IConfigurationRoot config
-        //                                , IMapper mapper
-        //                                )
-        //{
-        //    _repository = repository;//find db source to generate
-        //    _logger = logger;
-        //    _userMgr = userMgr;
-        //    _hasher = hasher;
-        //    _config = config;
-        //    _mapper = mapper;
-        //    if (_jwtSecurityTokenHandler == null)
-        //        _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-        //}
-        
+
+
+        /// <summary>
+        /// Register new user
+        /// </summary>
+        /// <param name="model">Username and Password</param>
+        /// <returns>ActionResult of TokenModel</returns>
+        /// <remarks>
+        /// Sample request:
+        ///     POST   
+        ///     {
+        ///       "userName": "RegisterNewUserTest@_.com",
+        ///       "password": "Password1!",
+        ///       "firstName": "Firstname",
+        ///       "middleName": "Middlename",
+        ///       "lastName": "Lastname",
+        ///       "domain":"Test"
+        ///     }
+        /// </remarks>
+        /// 
+        //No Auth required
+        [HttpPost("registernewuser")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // OK status if the new user is registered
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // BadRequest if something the user or UI sent prevented the new user from being registered
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Client domain not found (should only happen if consuming the API directly)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Something went wrong but the provided data was good
+        public async Task<ActionResult<RegisterUserResponseModel>> RegisterNewUser(RegisterNewUserModel model)
+        {
+            try
+            {
+                //ModelStateDictionary md = new ModelStateDictionary(); // For error messages
+
+                using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
+                using (UserAuthHelper UAManager = new UserAuthHelper(_repository_clientdb, _mapper, null, _config, null))
+                {
+                    Tuple<bool, bool, RegisterUserResponseModel, string> result = await UAManager.RegisterNewUser(model);
+                    if(result==null)
+                        return this.StatusCode(StatusCodes.Status500InternalServerError, "Failed to register new user.");
+                    if (!result.Item1) // If the user was not registered
+                    {
+                        if(result.Item2)
+                            return BadRequest(result.Item4); // Return BadRequest with the error message
+                        else
+                            return this.StatusCode(StatusCodes.Status500InternalServerError, result.Item4); // Return NotFound with the error message
+                    }
+                    
+                    return Ok(result.Item3);
+                
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception thrown while creating user: {e}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
+            }
+        }
+
         /// <summary>
         /// Login API to get access token
         /// </summary>
@@ -54,8 +111,8 @@ namespace PFAPI.Controllers
         /// Sample request:
         ///     POST 
         ///     {
-        ///       "userName": "root@hobo.build",
-        ///       "password": "AlexIsCool123!"
+        ///       "userName": "goodpeople@beautiful.world",
+        ///       "password": "password"
         ///     }
         /// </remarks>
         [HttpPost("login")]
@@ -64,54 +121,39 @@ namespace PFAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<TokenModel>> Login(CredentialwithDomainModel model)
+        public async Task<ActionResult<TokenModel>> Login(CredentialModel model)
         {
-            return BadRequest("Username does not belong to the domain.");
+            try
+            {
+                //ModelStateDictionary md = new ModelStateDictionary(); // For error messages
 
-            //try
-            //{
-            //    if (model.UserName.IsNullOrEmptyOrWhiteSpace() || model.Password.IsNullOrEmptyOrWhiteSpace() || model.Domain.IsNullOrEmptyOrWhiteSpace())
-            //        return BadRequest("Invalid username or password or domain.");
+                using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
+                using (UserAuthHelper UAManager = new UserAuthHelper(_repository_clientdb, _mapper, null, _config, null))
+                {
+                    string RemoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString();
+                    Tuple<bool, bool, TokenModel, string> result = await UAManager.Login(model, RemoteIpAddress);
+                    if (result == null)
+                        return this.StatusCode(StatusCodes.Status500InternalServerError, "Failed to Login.");
+                    if (!result.Item1) // If the user was not registered
+                    {
+                        if (result.Item2)
+                            return BadRequest(result.Item4); // Return BadRequest with the error message
+                        else
+                            return this.StatusCode(StatusCodes.Status500InternalServerError, result.Item4); // Return NotFound with the error message
+                    }
 
-            //    //Find Client DB name based on Center DB client account info/using
-            //    using (IHoBOClientRepository _repository_clientdb = new HoBOClientRepository(ClientDBHelper.GetClientDBContext(theClient.Id.ToString(), _config.GetConnectionString("HoBOCustomerConnectionString"), _config["Application:CustomerDBName"]), _config, _mapper, theClient.Id))
-            //    {
-            //        //Client DB
-            //        // handle User                   
+                    return Ok(result.Item3);
 
-            //        //use clientrepo to find aspnet user
-            //        AspNetUser user = await GetASPNETUserbyUserName(model.UserName, _repository_clientdb);
-            //        if (user == null)
-            //            return BadRequest($"Invalid username or password. {errStr}");
-
-            //        string theSalt = user.SecurityStamp;
-            //        if (model.Password != EnCryptionHelper.Decrypt(user.PasswordHash, theSalt))
-            //            return BadRequest("Invalid username or password.");
-
-            //        ZClientUser theClientUser = await _repository_clientdb.GetZClientUserByUserNameAsync(model.UserName);
-            //        if (theClientUser == null)// create
-            //            return BadRequest("ZClientUser does NOT exist.");
-
-            //        if (!theClientUser.IsEnabled || theClientUser.IsLocked)
-            //            return BadRequest("User is locked or not enabled.");
-
-
-            //        if (theClient.Id != theClientUser.ClientId)
-            //        {
-            //            return BadRequest("Username does not belong to the domain.");
-            //        }
-
-            //        return await ProcessTokenandReturn(user, theClientUser,_repository_clientdb);
-            //    }
-            //}
-            //catch (Exception e)
-            //{
-            //    _logger.LogError($"Exception thrown while logging in: {e}");
-            //    return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
-            //}
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception thrown while creating user: {e}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
+            }
         }
 
- 
+
         //[HttpPost("forgetpassword")]
         //[Consumes("application/json")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -142,7 +184,7 @@ namespace PFAPI.Controllers
         //        }
         //        using (IHoBOClientRepository _repository_clientdb = new HoBOClientRepository(ClientDBHelper.GetClientDBContext(theClient.Id.ToString(), _config.GetConnectionString("HoBOCustomerConnectionString"), _config["Application:CustomerDBName"]), _config, _mapper, theClient.Id))
         //        {
-        //            ZClientUser theClientUser = await _repository_clientdb.GetZClientUserByUserNameAsync(model.UserName);
+        //            ZclientUser theClientUser = await _repository_clientdb.GetZClientUserByUserNameAsync(model.UserName);
         //            if (theClientUser == null)
         //            {
         //                md.AddModelError("Invalid request", "Username does not exist.");
@@ -205,7 +247,7 @@ namespace PFAPI.Controllers
         //                    byte[] tokenBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(theModel.Token);
         //                    string encrypted = Convert.ToBase64String(tokenBytes);
         //                    string URLlink = string.Format("{0}://{1}/ResetPassword?email={2}&token={3}", HttpContext.Request.Scheme, url, username.FirstOrDefault(), encrypted); 
-                                                        
+
         //                    //put link into email
         //                    string toReplace = "{forgotPasswordLink}";
 
@@ -227,7 +269,7 @@ namespace PFAPI.Controllers
 
         //                    if (didEmail == null || didEmail.Item2 == null)
         //                    {
-                                
+
         //                        string errmsg = $"Failed to send forgot password email.";
         //                        if(didEmail != null)
         //                        {
@@ -235,8 +277,8 @@ namespace PFAPI.Controllers
         //                        }
         //                        return this.StatusCode(StatusCodes.Status500InternalServerError, errmsg);
         //                    }
-                            
-                            
+
+
 
         //                }
 
@@ -376,7 +418,7 @@ namespace PFAPI.Controllers
         //        #endregion
 
         //        result.UserName = model.UserName;
-                
+
 
         //        using (IHoBOClientRepository _repository_clientdb = new HoBOClientRepository(ClientDBHelper.GetClientDBContext(theClient.Id.ToString(), _config.GetConnectionString("HoBOCustomerConnectionString"), _config["Application:CustomerDBName"]), _config, _mapper, theClient.Id))
         //        {
@@ -440,196 +482,6 @@ namespace PFAPI.Controllers
         //}
 
 
-        ///// <summary>
-        ///// Register new user
-        ///// </summary>
-        ///// <param name="clientDomain"></param>
-        ///// <param name="model">Username and Password</param>
-        ///// <returns>ActionResult of TokenModel</returns>
-        ///// <remarks>
-        ///// Sample request:
-        /////     POST   
-        /////     {
-        /////       "userName": "RegisterNewUserTest@_.com",
-        /////       "password": "Password1!",
-        /////       "firstName": "Firstname",
-        /////       "middleName": "Middlename",
-        /////       "lastName": "Lastname",
-        /////       "domain":"Test"
-        /////     }
-        ///// </remarks>
-        ///// 
-        ////No Auth required
-        //[HttpPost("registernewuser")]
-        //[Consumes("application/json")]
-        //[ProducesResponseType(StatusCodes.Status200OK)] // OK status if the new user is registered
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)] // BadRequest if something the user or UI sent prevented the new user from being registered
-        //[ProducesResponseType(StatusCodes.Status404NotFound)] // Client domain not found (should only happen if consuming the API directly)
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)] // Something went wrong but the provided data was good
-        //public async Task<ActionResult<RegisterUserResponseModel>> RegisterNewUser(RegisterNewUserModel model)
-        //{
-        //    try
-        //    {
-
-        //        ModelStateDictionary md = new ModelStateDictionary(); // For error messages
-
-        //        #region Get Client Info
-        //        ZClientAccountCenter theClient = await GetClientbyDomain(model.Domain);
-        //        if (theClient == null)
-        //        {
-        //            return BadRequest($"Invalid domain {model.Domain}. {errStr}");
-        //        }
-        //        if (!theClient.IsActive || theClient.IsLocked)
-        //            return BadRequest($"Client account is deactived or locked with clientid {model.Domain}");
-        //        #endregion
-
-
-        //        using (IHoBOClientRepository _repository_clientdb = new HoBOClientRepository(ClientDBHelper.GetClientDBContext(theClient.Id.ToString(), _config.GetConnectionString("HoBOCustomerConnectionString"), _config["Application:CustomerDBName"]), _config, _mapper, theClient.Id))
-        //        {
-        //            // 1 verify username
-        //            AspNetUser user = await GetASPNETUserbyUserName(model.UserName, _repository_clientdb);// search for email in DB
-        //            if (user != null) // if email exists, do not create new user (BadRequest)
-        //            {
-        //                md.AddModelError("BadRequest", $"An account with that email already exists. {errStr}"); // Set return message
-        //                return BadRequest(md); // Return BadRequest with message
-        //            }
-
-        //            // 2 veriry zclient user username + client ID
-        //            if (_repository_clientdb.GetExists<ZClientUser>($"UserName=='{model.UserName}' and ClientId == GUID('{theClient.Id}')"))
-        //            {
-        //                md.AddModelError("BadRequest", "An account with that email already exists."); // Set return message
-        //                return BadRequest(md); // Return BadRequest with message
-        //            }
-
-        //            //check password
-        //            if (!validatePasswordRules(model.Password, md))
-        //            {
-        //                return BadRequest(md);
-        //            }
-        //            RegisterUserResponseModel response = new RegisterUserResponseModel(); // Response model should be returned
-        //            using (var transaction = (_repository_clientdb as HoBOClientRepository)._context.Database.BeginTransaction())
-        //            {
-        //                try
-        //                {
-        //                    RandomStringGenerator randomStringGen = new RandomStringGenerator();
-        //                    string theSalt = randomStringGen.Generate(32);
-        //                    string passwordHash = EnCryptionHelper.Encrypt(model.Password, theSalt);
-
-        //                    var newIdentityUser = new AspNetUser { Id = Guid.NewGuid().ToString(), Email = model.UserName, UserName = model.UserName, PasswordHash = passwordHash, SecurityStamp = theSalt }; // create new AspIdentityUser model
-
-        //                    _repository_clientdb.Create(newIdentityUser);
-        //                    if (!await _repository_clientdb.SaveChangesAsync(this.User))
-        //                    {
-        //                        _logger.LogWarning($"Could not save asp net user data to database;");
-        //                        return BadRequest();
-        //                    }
-        //                    model.Password.DefaultIfEmpty();
-        //                    ZClientUser entity = _mapper.Map<ZClientUser>(model); // Async/Await?
-
-        //                    entity.IdentityId = newIdentityUser.Id; // Not set by mapper, set Identity ID to ID of new IdentityUser
-        //                    entity.ClientId = theClient.Id; // Not set by mapper, set ClientID to Client ID from Client Domain
-
-        //                    entity.IsAccountAdmin = false; // Registering users can not be root
-        //                    entity.IsAccountRoot = false; // Registering users can not be admin
-        //                    entity.IsEnabled = false; // Registering users are not enabled by default // SEAN - isLocked vs isEnabled 
-        //                    entity.IsLocked = true; // Registering users are locked by default                
-        //                    entity.UserType = HoBOUserTypes.UnKnown.ToString();
-        //                    _repository_clientdb.Create(entity); // create ZClientUser in the DB
-
-        //                    if (!await _repository_clientdb.SaveChangesAsync(this.User)) // Save the new user to zClientUsers if it fails return server error 500
-        //                    {
-        //                        return StatusCode(StatusCodes.Status500InternalServerError, $"Failed to register the new user."); // Failed to create the ZClientUser, return Internal Server Error
-        //                    }
-
-        //                    response.ID = entity.Id; // Set the response ID to the ID of the new zClientUser
-        //                    response.UserName = entity.UserName; // Set the response UserName to the email address of the newly created zClientUser
-
-        //                    transaction.Commit();
-
-        //                }
-        //                catch (Exception e)
-        //                {
-        //                    transaction.Rollback();
-        //                    _logger.LogError(LoggingEvents.Other, e, "Transaction rollback due to exception;", this.User);
-        //                    return this.StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
-        //                }
-
-        //                //send email here
-        //                NotificationTemplate registernewuserEmailTemplate = _repository_clientdb.Get<NotificationTemplate>().Where(x => x.TemplateName == "RegisterNewUser").FirstOrDefault();
-
-        //                if (registernewuserEmailTemplate == null)
-        //                {
-        //                    return this.StatusCode(StatusCodes.Status500InternalServerError, $"Failed to load email template");
-        //                }
-
-        //                //send email from here/ trigger
-        //                using (NotificationAPIHelper theNotificationManager = new NotificationAPIHelper(_config["Application:AppName"], _config["Application:AppKey"], _config["T2BNotificationService:ServiceURL"]))
-        //                {
-        //                    List<String> adminEmail = new List<string>();
-        //                    adminEmail.Add(_config["NotificationConfig:AdminEmail"]);
-
-        //                    EmailNotificationRequest Email = new EmailNotificationRequest();
-        //                    Email.To = adminEmail; //config email
-        //                    Email.HtmlBody = registernewuserEmailTemplate.EmailHtmlbody;
-        //                    Email.Subject = registernewuserEmailTemplate.EmailSubject;
-        //                    Email.withAttachment = false;
-        //                    Email.From = _config["NotificationConfig:SystemContactUsEmail"];
-
-        //                    //replace
-        //                    string toReplace = "{NewEmail}";
-        //                    string NewEmail = model.UserName;
-
-        //                    if (Email.HtmlBody.Contains(toReplace))
-        //                    {
-        //                        if (NewEmail != null)
-        //                            Email.HtmlBody = Email.HtmlBody.Replace(toReplace, NewEmail);
-        //                    }
-
-        //                    toReplace = "{FirstName}";
-        //                    if (Email.HtmlBody.Contains(toReplace))
-        //                    {
-        //                        if (model.FirstName != null)
-        //                            Email.HtmlBody = Email.HtmlBody.Replace(toReplace, model.FirstName);
-        //                    }
-        //                    toReplace = "{LastName}";
-        //                    if (Email.HtmlBody.Contains(toReplace))
-        //                    {
-        //                        if (model.FirstName != null)
-        //                            Email.HtmlBody = Email.HtmlBody.Replace(toReplace, model.LastName);
-        //                    }
-
-        //                    toReplace = "{Email}";
-        //                    if (Email.HtmlBody.Contains(toReplace))
-        //                    {
-        //                        if (Email.To.FirstOrDefault() != null)
-        //                            Email.HtmlBody = Email.HtmlBody.Replace(toReplace, Email.To.FirstOrDefault());
-        //                    }
-
-        //                    Tuple<HttpStatusCode, EmailNotificationResultModel, HttpWebResponse, string> didEmail = theNotificationManager.EmailNotify(Email);
-
-        //                    if (didEmail == null || didEmail.Item2 == null)
-        //                    {
-
-        //                        string errmsg = $"Failed to send forgot password email.";
-        //                        if (didEmail != null)
-        //                        {
-        //                            errmsg = $"{errmsg}Status code:{didEmail.Item1};" + (didEmail.Item3 == null ? string.Empty : didEmail.Item3.ToFormatString()) + didEmail.Item4;
-        //                        }
-        //                        return this.StatusCode(StatusCodes.Status500InternalServerError, errmsg);
-        //                    }
-        //                }
-                            
-        //                return Ok(response);
-        //            }
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _logger.LogError($"Exception thrown while creating user: {e}");
-        //        return StatusCode(StatusCodes.Status500InternalServerError, $"{e.toExceptionString()}");
-        //    }
-        //}
-
         //[HttpPost("refreshtoken")]
         //[Consumes("application/json")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -668,11 +520,11 @@ namespace PFAPI.Controllers
         //                return BadRequest($"Invalid username or password. {errStr}");
 
         //            // handle User
-        //            ZClientUser theClientUser = await _repository_clientdb.GetFirstAsync<ZClientUser>($"UserName='{user.UserName}'", null, "ZClientUserRefreshToken");
-        //            //ZClientUser theClientUser = _repository_clientdb.GetQueryable<ZClientUser>().Where(o => o.UserName == user.UserName).FirstOrDefault();
+        //            ZclientUser theClientUser = await _repository_clientdb.GetFirstAsync<ZclientUser>($"UserName='{user.UserName}'", null, "ZClientUserRefreshToken");
+        //            //ZclientUser theClientUser = _repository_clientdb.GetQueryable<ZclientUser>().Where(o => o.UserName == user.UserName).FirstOrDefault();
 
         //            if (theClientUser == null)// create
-        //                return BadRequest("ZClientUser does NOT exist.");
+        //                return BadRequest("ZclientUser does NOT exist.");
 
         //            if (!theClientUser.IsEnabled || theClientUser.IsLocked)
         //                return BadRequest("Invalid user.");
@@ -712,7 +564,7 @@ namespace PFAPI.Controllers
 
         //#region supporting Login
         //// need to retrieve ModuleOperationsInfo 
-        //private async Task<JwtSecurityToken> GenerateJwtToken(AppUser user, ZClientUser theClientUser, Guid JTI, DateTime ProcessTimeUTC, ClientUserwithValidOperations userOperationPermissions)
+        //private async Task<JwtSecurityToken> GenerateJwtToken(AppUser user, ZclientUser theClientUser, Guid JTI, DateTime ProcessTimeUTC, ClientUserwithValidOperations userOperationPermissions)
         //{
         //    try
         //    {
@@ -754,7 +606,7 @@ namespace PFAPI.Controllers
         //        return null;
         //    }
         //}
-        //private JwtSecurityToken GenerateJwtToken(AspNetUser user, ZClientUser theClientUser, Guid JTI, DateTime ProcessTimeUTC, IHoBOClientRepository _repository_clientdb, out ClientUserwithValidOperations userOperationPermissions)
+        //private JwtSecurityToken GenerateJwtToken(AspNetUser user, ZclientUser theClientUser, Guid JTI, DateTime ProcessTimeUTC, IHoBOClientRepository _repository_clientdb, out ClientUserwithValidOperations userOperationPermissions)
         //{
         //    try
         //    {
@@ -880,7 +732,7 @@ namespace PFAPI.Controllers
         //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["AuthSettings:SecretKey"]))
         //    };
         //}
-        //private async Task<ActionResult<TokenModel>> ProcessTokenandReturn(AspNetUser user, ZClientUser theClientUser,IHoBOClientRepository _repository_clientdb)
+        //private async Task<ActionResult<TokenModel>> ProcessTokenandReturn(AspNetUser user, ZclientUser theClientUser,IHoBOClientRepository _repository_clientdb)
         //{
         //    JwtSecurityToken token = GetJWTToken(user, theClientUser, _repository_clientdb, out ZClientUserRefreshToken Rtoken, out string msg, out ClientUserwithValidOperations userOperationPermissions);
         //    if (token == null)
@@ -894,7 +746,7 @@ namespace PFAPI.Controllers
         //        ClientAccountID = theClientUser.ClientId
         //    });
         //}
-        //private JwtSecurityToken GetJWTToken(AspNetUser user, ZClientUser theClientUser, IHoBOClientRepository _repository_clientdb, out ZClientUserRefreshToken Rtoken, out string msg, out ClientUserwithValidOperations userOperationPermissions)
+        //private JwtSecurityToken GetJWTToken(AspNetUser user, ZclientUser theClientUser, IHoBOClientRepository _repository_clientdb, out ZClientUserRefreshToken Rtoken, out string msg, out ClientUserwithValidOperations userOperationPermissions)
         //{
         //    msg = string.Empty;
         //    userOperationPermissions = null;
@@ -916,7 +768,7 @@ namespace PFAPI.Controllers
 
         //    return token;
         //}
-        //private async Task<ActionResult<TokenWithSupportinginfoModel>> ProcessTokenandReturnUIInfo(AspNetUser user, ZClientUser theClientUser, IHoBOClientRepository _repository_clientdb)
+        //private async Task<ActionResult<TokenWithSupportinginfoModel>> ProcessTokenandReturnUIInfo(AspNetUser user, ZclientUser theClientUser, IHoBOClientRepository _repository_clientdb)
         //{
         //    JwtSecurityToken token = GetJWTToken(user, theClientUser, _repository_clientdb, out ZClientUserRefreshToken Rtoken, out string msg, out ClientUserwithValidOperations userOperationPermissions);
         //    if (token == null)

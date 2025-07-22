@@ -1,10 +1,11 @@
-﻿using System;
+﻿using K.Common;
+using KS.Library.EFDB;
+using PFAPI.SupportModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using K.Common;
-using PFAPI.SupportModels;
 
 namespace DomainRepository.IRepositories
 {
@@ -16,7 +17,9 @@ namespace DomainRepository.IRepositories
         Task<PagedData<TReturn>> CreatePagedResults<T, TReturn>(QueryParameter theQueryParameter, IQueryable<T> inputQueryable = null) where T : class where TReturn : class;
         Task<IEnumerable<TReturn>> GetListResult<T, TReturn>(bool includeallchildrendata, IQueryable<T> inputQueryable = null) where T : class where TReturn : class;        
         Task<TReturn> GetOneDataModel<T, TReturn>(QueryParameterMin theQueryParameter, IQueryable<T> inputQueryable = null) where T : class where TReturn : class;
-        //Task<ZClientUser> GetZClientUserByUserNameAsync(string username, bool includeChildrendata = false);
+
+        Task<ZclientUser> GetZClientUserByUserNameAsync(string username, bool includeChildrendata = false);
+        //Task<ZclientUser> GetZClientUserByUserNameAsync(string username, bool includeChildrendata = false);
         //List<ClientUserOperations> GetUserOperations(Guid userid, Guid clientid);
         //List<string> GetRootUserPermissionCodes();
         //List<string> GetAdminUserPermissionCodes(Guid clientid);

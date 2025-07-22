@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using K.Common;
 using DomainRepository.IRepositories;
 using PFAPI.SupportModels;
+using KS.Library.EFDB;
 
 namespace PFAPI.utility
 {
@@ -263,7 +264,7 @@ namespace PFAPI.utility
             if (!Guid.TryParse(uid, out Guid tuid))
                 return string.Empty;
 
-            ZClientUser theUser = repository.GetById<ZClientUser>(tuid);
+            ZclientUser theUser = repository.GetById<ZclientUser>(tuid);
             if(theUser==null)
                 return string.Empty;            
 
