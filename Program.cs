@@ -124,7 +124,7 @@ builder.Services.AddSwaggerGen(
                {
                    #region swagger 5.0.1 +
                    setupAction.SwaggerDoc(
-                           $"v1",
+                           $"v1",           // !!! it seems that the version name must be "v1" for Swagger UI to work properly
                            new Microsoft.OpenApi.Models.OpenApiInfo()//Swashbuckle.AspNetCore.Swagger.Info() //Microsoft.OpenApi.Models.OpenApiInfo()
                            {
                                Title =  "PF API",    // Configuration["Application:AppName"],
@@ -182,7 +182,7 @@ app.UseSwagger(c =>
 //app.UseSwaggerUI();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("./v1/swagger.json", "My API V1");
+    c.SwaggerEndpoint("./v1/swagger.json", "My API V1");        // !!! it seems that the version name must be "v1" for Swagger UI to work properly
 });
 
 app.UseRouting();
