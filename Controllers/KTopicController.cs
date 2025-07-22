@@ -1,4 +1,6 @@
-﻿using K.Common;
+﻿using AutoMapper;
+using DomainRepository.IRepositories;
+using K.Common;
 using KS.Library.Interface.PFAPI.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,15 +17,15 @@ namespace PFAPI.Controllers
     [ApiController]   
     public class KTopicController : ControllerBase
     {
-        //private readonly IHoBOCenterRepository _repository;
-       // private readonly IMapper _mapper;
-     //   private readonly LinkGenerator _linkGenerator;
+        private readonly IPFClientRepository _repository;
+        private readonly IMapper _mapper;
+        //   private readonly LinkGenerator _linkGenerator;
         private ILogger<KTopicController> _logger;
         private IConfiguration _config;
         private string _curDataModelName = "KTopic";
 
         public KTopicController(
-            //IHoBOCenterRepository repository, IMapper mapper
+            //IPFClientRepository repository, IMapper mapper
                                        ILogger<KTopicController> logger//, LinkGenerator linkGenerator
                                       , IConfiguration config)
         {
@@ -67,7 +69,7 @@ namespace PFAPI.Controllers
                 }
 
                 //// work with Client Database
-                //using (IHoBOClientRepository _repository_clientdb = HoBOClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+                //using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
                 //{
                 //    var theResult = await _repository_clientdb.CreatePagedResults<KTopic, KTopicModel>(theQueryParameter);
                 //    return Ok(theResult);
@@ -137,7 +139,7 @@ namespace PFAPI.Controllers
         //        return NotFound();
 
         //        //// work with Client Database
-        //        //using (IHoBOClientRepository _repository_clientdb = HoBOClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+        //        //using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
         //        //{
         //        //    IQueryable<KTopic> theQuery = _repository_clientdb.GetQueryable<KTopic>();
         //        //    theQuery = theQuery.Where(o => o.Id == id);
@@ -187,7 +189,7 @@ namespace PFAPI.Controllers
      //   {
      //       try
      //       {
-     //           using (IHoBOClientRepository _repository_clientdb = HoBOClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+     //           using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
      //           {
      //               //Verify DB constraints
      //               if (!VerificationHelper.VerifyDBconstraints(_repository_clientdb, model, out string msg))
@@ -244,7 +246,7 @@ namespace PFAPI.Controllers
      //   {
      //       try
      //       {
-     //           using (IHoBOClientRepository _repository_clientdb = HoBOClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+     //           using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
      //           {
      //               var existingentity = _repository_clientdb.GetById<KTopic>(id);
      //               if (existingentity == null) return NotFound($"Could not find {_curDataModelName} with id of {id}");
@@ -312,7 +314,7 @@ namespace PFAPI.Controllers
      //   {
      //       try
      //       {
-     //           using (IHoBOClientRepository _repository_clientdb = HoBOClientRepository.CreateRepositoryInstance(User, _config, _mapper))
+     //           using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
      //           {
      //               var existingentity = _repository_clientdb.GetById<KTopic>(id);
      //               if (existingentity == null) return NotFound($"Could not find {_curDataModelName} with id of {id}");
