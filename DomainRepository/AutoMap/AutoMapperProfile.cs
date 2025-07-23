@@ -36,9 +36,9 @@ namespace DomainRepository.Mapping
                  .ForMember(d => d.CommentList, opt => opt.MapFrom(s=>s.KtopicComments))
                 .ReverseMap()
                 .ForMember(s => s.KtopicComments, opt => opt.Ignore())
-              //  .ForMember(s => s.CreatedAtUtc, opt => opt.Ignore())
+                .ForMember(s => s.CreatedAtUtc, opt => opt.Ignore())
                 .ForMember(s => s.CreatedByUserId, opt => opt.Ignore())
-              //  .ForMember(s => s.LastUpdatedAtUtc, opt => opt.Ignore())
+                .ForMember(s => s.LastUpdatedAtUtc, opt => opt.Ignore())
                 .ForMember(s => s.LastUpdatedByUserId, opt => opt.Ignore())
                 ;
 
