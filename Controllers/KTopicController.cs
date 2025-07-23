@@ -47,7 +47,7 @@ namespace PFAPI.Controllers
         /// <param name="qp_includedata">Specific children data that need to be get; one level lower only; split by [,]</param>
         /// <param name="qp_filter">Filter condition</param>
         /// <returns>An ActionResult of PagedData for existing Ktopic Models</returns>
-        //[Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
+        [Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
         [HttpGet(Name = SystemStatics.Route_GetAll_KTopic)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -136,7 +136,7 @@ namespace PFAPI.Controllers
         /// <response code="400">If the request/data is not valid</response>       
         /// <response code="500">If error happened at server side</response>
         /// <response code="422">If the provided data is not valid</response>               
-        [Authorize(Policy4ModuleOperations.P_Admin.AdminManageOperation)]
+        [Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -149,7 +149,6 @@ namespace PFAPI.Controllers
         {
             try
             {
-                // using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
                 using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
                 {
                     //Verify DB constraints
