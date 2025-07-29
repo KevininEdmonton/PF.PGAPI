@@ -41,6 +41,10 @@ namespace PFAPI.utility
             , Route_GetAll_KTopicComment = "Route_GetAll_KTopicComment"
             , Route_GetOne_KTopicComment = "Route_GetOne_KTopicComment"
 
+            , Route_GetList_HousewPrice = "Route_GetList_HousewPrice"
+            , Route_GetAll_HousewPrice = "Route_GetAll_HousewPrice"
+            , Route_GetOne_HousewPrice = "Route_GetOne_HousewPrice"
+
             ;
         public const string SYS_Default_QP_Filter = "";
 

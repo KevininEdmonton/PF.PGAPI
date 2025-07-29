@@ -1,0 +1,358 @@
+[
+  {
+    "Id": "d131b03b-6f60-4e3d-8b8e-1b589fe3f1fa",
+    "Name": "Understanding Async in C#",
+    "Description": "An overview of async and await keywords in C# with best practices.",
+    "Category": "Technical",
+    "Icon": "icon-code",
+    "CommentList": [
+      {
+        "Id": "f74e2b3c-3fc9-4b67-b0d1-06c9e5bff38e",
+        "byUserName": "alice_dev",
+        "Comment": "This was very helpful. Thanks!",
+        "ParentKTopicId": "d131b03b-6f60-4e3d-8b8e-1b589fe3f1fa",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  },
+  {
+    "Id": "ec4e823d-9e14-4c20-8e96-2ea6b5c2df15",
+    "Name": "Sales Funnel Basics",
+    "Description": "Fundamental stages of a successful sales funnel.",
+    "Category": "Sales",
+    "Icon": "icon-sales",
+    "CommentList": [
+      {
+        "Id": "bccb4d24-b3d7-471b-b9cf-d6c2c58a2c64",
+        "byUserName": "marketing_guru",
+        "Comment": "Great overview of the funnel strategy.",
+        "ParentKTopicId": "ec4e823d-9e14-4c20-8e96-2ea6b5c2df15",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  },
+  {
+    "Id": "f2f4c7c1-4cb1-4e6d-bb61-2309b20470f5",
+    "Name": "Tips for Remote Teams",
+    "Description": "How to manage distributed teams effectively.",
+    "Category": "General",
+    "Icon": "icon-remote",
+    "CommentList": [
+      {
+        "Id": "a5cc8c2c-b918-4601-9d3e-2681c0a35fa1",
+        "byUserName": "john_teamlead",
+        "Comment": "We applied these tips with great success.",
+        "ParentKTopicId": "f2f4c7c1-4cb1-4e6d-bb61-2309b20470f5",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  },
+  {
+    "Id": "bf0276bc-91c7-42c1-9371-ef1646010d08",
+    "Name": "Email Notification System",
+    "Description": "Implementation guide for notification using SMTP in .NET.",
+    "Category": "Support",
+    "Icon": "icon-email",
+    "CommentList": [
+      {
+        "Id": "5c4d1025-2261-41b1-9e0a-774e9c56f83a",
+        "byUserName": "support_team",
+        "Comment": "Looking forward to integrating this.",
+        "ParentKTopicId": "bf0276bc-91c7-42c1-9371-ef1646010d08",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  },
+  {
+    "Id": "2899a6aa-e2c2-4be2-b1fb-79a22ce84d7b",
+    "Name": "C# Naming Conventions",
+    "Description": "Standard naming conventions for cleaner C# code.",
+    "Category": "Technical",
+    "Icon": "icon-naming",
+    "CommentList": [
+      {
+        "Id": "f3ff0f29-6db0-4b94-a6d0-4c1fa2be7707",
+        "byUserName": "dev_susan",
+        "Comment": "Should we add guidelines for async methods too?",
+        "ParentKTopicId": "2899a6aa-e2c2-4be2-b1fb-79a22ce84d7b",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  },
+  {
+    "Id": "33c1c991-5054-4381-a9ef-1fd8fd351027",
+    "Name": "Support Ticket Workflow",
+    "Description": "Describes how support tickets are processed.",
+    "Category": "Support",
+    "Icon": "icon-support",
+    "CommentList": [
+      {
+        "Id": "ccdf5e4d-c76f-4c8f-a43c-3fd9ae93de9e",
+        "byUserName": "it_ops",
+        "Comment": "Can we add SLA reminders?",
+        "ParentKTopicId": "33c1c991-5054-4381-a9ef-1fd8fd351027",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  },
+  {
+    "Id": "91ea31a1-b769-4984-90a6-91e67838b24b",
+    "Name": "Marketing Campaign Ideas",
+    "Description": "Creative approaches to engage audiences.",
+    "Category": "Marketing",
+    "Icon": "icon-idea",
+    "CommentList": [
+      {
+        "Id": "08e8d089-73f7-4d37-9c14-f9490046ed6e",
+        "byUserName": "marketeer007",
+        "Comment": "Love the newsletter tip!",
+        "ParentKTopicId": "91ea31a1-b769-4984-90a6-91e67838b24b",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  },
+  {
+    "Id": "b3ebd342-0f1b-472e-baf1-2e0679a5ce3b",
+    "Name": "Secure API Design",
+    "Description": "Essential security measures for RESTful APIs.",
+    "Category": "Technical",
+    "Icon": "icon-lock",
+    "CommentList": [
+      {
+        "Id": "dbcd00cf-2697-45d7-81a3-d274a76ff6cc",
+        "byUserName": "api_master",
+        "Comment": "Let’s add a section on JWT best practices.",
+        "ParentKTopicId": "b3ebd342-0f1b-472e-baf1-2e0679a5ce3b",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  },
+  {
+    "Id": "2b5992c7-3049-43b4-9ea9-9cbde29fe804",
+    "Name": "General Company Announcements",
+    "Description": "A place to share news and general information.",
+    "Category": "General",
+    "Icon": "icon-bullhorn",
+    "CommentList": [
+      {
+        "Id": "ec2575db-d03e-4954-b917-49111a93ab95",
+        "byUserName": "hr_admin",
+        "Comment": "Updated benefits plan posted.",
+        "ParentKTopicId": "2b5992c7-3049-43b4-9ea9-9cbde29fe804",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  },
+  {
+    "Id": "21d0fcec-b7a3-4fdc-8cf6-d2b25df78c1f",
+    "Name": "Tooling Suggestions",
+    "Description": "What tools are working well for our teams?",
+    "Category": "Other",
+    "Icon": "icon-tools",
+    "CommentList": [
+      {
+        "Id": "5d90174f-d37f-406f-880e-9f9b9d7386f2",
+        "byUserName": "qa_jen",
+        "Comment": "Loving Postman and Azure DevOps!",
+        "ParentKTopicId": "21d0fcec-b7a3-4fdc-8cf6-d2b25df78c1f",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  },
+  {
+    "Id": "e1a1c1a1-0001-4000-8000-000000000001",
+    "Name": "Async Programming in C#",
+    "Description": "Best practices and patterns for async/await in C#.",
+    "Category": "Technical",
+    "Icon": "icon-async",
+    "CreatedByUserID": "user1",
+    "CreatedAtUTC": "2025-07-01T08:00:00Z",
+    "LastUpdatedByUserID": "user2",
+    "LastUpdatedAtUTC": "2025-07-10T09:00:00Z",
+    "CommentList": [
+      {
+        "Id": "c1a1c1a1-0001-4000-8000-000000000001",
+        "byUserName": "dev_jane",
+        "Comment": "Great explanation of async pitfalls.",
+        "ParentKTopicId": "e1a1c1a1-0001-4000-8000-000000000001",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "dev_jane",
+        "CreatedAtUTC": "2025-07-01T09:00:00Z",
+        "LastUpdatedByUserID": "dev_jane",
+        "LastUpdatedAtUTC": "2025-07-01T09:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0002-4000-8000-000000000002",
+        "byUserName": "dev_mike",
+        "Comment": "Can you add more on ConfigureAwait?",
+        "ParentKTopicId": "e1a1c1a1-0001-4000-8000-000000000001",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "dev_mike",
+        "CreatedAtUTC": "2025-07-01T10:00:00Z",
+        "LastUpdatedByUserID": "dev_mike",
+        "LastUpdatedAtUTC": "2025-07-01T10:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0003-4000-8000-000000000003",
+        "byUserName": "dev_sara",
+        "Comment": "Async/await is a game changer.",
+        "ParentKTopicId": "e1a1c1a1-0001-4000-8000-000000000001",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "dev_sara",
+        "CreatedAtUTC": "2025-07-01T11:00:00Z",
+        "LastUpdatedByUserID": "dev_sara",
+        "LastUpdatedAtUTC": "2025-07-01T11:00:00Z"
+      }
+    ]
+  },
+  {
+    "Id": "e1a1c1a1-0002-4000-8000-000000000002",
+    "Name": "Sales Funnel Optimization",
+    "Description": "Techniques to improve conversion rates in sales funnels.",
+    "Category": "Sales",
+    "Icon": "icon-sales",
+    "CreatedByUserID": "user2",
+    "CreatedAtUTC": "2025-07-02T08:00:00Z",
+    "LastUpdatedByUserID": "user3",
+    "LastUpdatedAtUTC": "2025-07-11T09:00:00Z",
+    "CommentList": [
+      {
+        "Id": "c1a1c1a1-0004-4000-8000-000000000004",
+        "byUserName": "sales_anna",
+        "Comment": "Very useful for our team.",
+        "ParentKTopicId": "e1a1c1a1-0002-4000-8000-000000000002",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "sales_anna",
+        "CreatedAtUTC": "2025-07-02T09:00:00Z",
+        "LastUpdatedByUserID": "sales_anna",
+        "LastUpdatedAtUTC": "2025-07-02T09:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0005-4000-8000-000000000005",
+        "byUserName": "sales_bob",
+        "Comment": "Can you share more case studies?",
+        "ParentKTopicId": "e1a1c1a1-0002-4000-8000-000000000002",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "sales_bob",
+        "CreatedAtUTC": "2025-07-02T10:00:00Z",
+        "LastUpdatedByUserID": "sales_bob",
+        "LastUpdatedAtUTC": "2025-07-02T10:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0006-4000-8000-000000000006",
+        "byUserName": "sales_cara",
+        "Comment": "Loved the funnel diagram.",
+        "ParentKTopicId": "e1a1c1a1-0002-4000-8000-000000000002",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "sales_cara",
+        "CreatedAtUTC": "2025-07-02T11:00:00Z",
+        "LastUpdatedByUserID": "sales_cara",
+        "LastUpdatedAtUTC": "2025-07-02T11:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0007-4000-8000-000000000007",
+        "byUserName": "sales_dan",
+        "Comment": "What about B2B funnels?",
+        "ParentKTopicId": "e1a1c1a1-0002-4000-8000-000000000002",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "sales_dan",
+        "CreatedAtUTC": "2025-07-02T12:00:00Z",
+        "LastUpdatedByUserID": "sales_dan",
+        "LastUpdatedAtUTC": "2025-07-02T12:00:00Z"
+      }
+    ]
+  },
+  {
+    "Id": "e1a1c1a1-0003-4000-8000-000000000003",
+    "Name": "Remote Team Management",
+    "Description": "Strategies for leading distributed teams.",
+    "Category": "General",
+    "Icon": "icon-remote",
+    "CreatedByUserID": "user3",
+    "CreatedAtUTC": "2025-07-03T08:00:00Z",
+    "LastUpdatedByUserID": "user4",
+    "LastUpdatedAtUTC": "2025-07-12T09:00:00Z",
+    "CommentList": [
+      {
+        "Id": "c1a1c1a1-0008-4000-8000-000000000008",
+        "byUserName": "team_john",
+        "Comment": "Remote work tips are spot on.",
+        "ParentKTopicId": "e1a1c1a1-0003-4000-8000-000000000003",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "team_john",
+        "CreatedAtUTC": "2025-07-03T09:00:00Z",
+        "LastUpdatedByUserID": "team_john",
+        "LastUpdatedAtUTC": "2025-07-03T09:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0009-4000-8000-000000000009",
+        "byUserName": "team_lisa",
+        "Comment": "How do you handle time zones?",
+        "ParentKTopicId": "e1a1c1a1-0003-4000-8000-000000000003",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "team_lisa",
+        "CreatedAtUTC": "2025-07-03T10:00:00Z",
+        "LastUpdatedByUserID": "team_lisa",
+        "LastUpdatedAtUTC": "2025-07-03T10:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0010-4000-8000-000000000010",
+        "byUserName": "team_raj",
+        "Comment": "We use Slack for communication.",
+        "ParentKTopicId": "e1a1c1a1-0003-4000-8000-000000000003",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "team_raj",
+        "CreatedAtUTC": "2025-07-03T11:00:00Z",
+        "LastUpdatedByUserID": "team_raj",
+        "LastUpdatedAtUTC": "2025-07-03T11:00:00Z"
+      }
+    ]
+  },
+  {
+    "Id": "e1a1c1a1-0004-4000-8000-000000000004",
+    "Name": "Email Notification System",
+    "Description": "How to implement notifications using SMTP.",
+    "Category": "Support",
+    "Icon": "icon-email",
+    "CreatedByUserID": "user4",
+    "CreatedAtUTC": "2025-07-04T08:00:00Z",
+    "LastUpdatedByUserID": "user5",
+    "LastUpdatedAtUTC": "2025-07-13T09:00:00Z",
+    "CommentList": [
+      {
+        "Id": "c1a1c1a1-0011-4000-8000-000000000011",
+        "byUserName": "support_amy",
+        "Comment": "SMTP setup was easy to follow.",
+        "ParentKTopicId": "e1a1c1a1-0004-4000-8000-000000000004",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "support_amy",
+        "CreatedAtUTC": "2025-07-04T09:00:00Z",
+        "LastUpdatedByUserID": "support_amy",
+        "LastUpdatedAtUTC": "2025-07-04T09:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0012-4000-8000-000000000012",
+        "byUserName": "support_ben",
+        "Comment": "Can you add troubleshooting tips?",
+        "ParentKTopicId": "e1a1c1a1-0004-4000-8000-000000000004",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "support_ben",
+        "CreatedAtUTC": "2025-07-04T10:00:00Z",
+        "LastUpdatedByUserID": "support_ben",
+        "LastUpdatedAtUTC": "2025-07-04T10:00:00Z"
+      },
+      {
+        "Id": "c1a1c1a1-0013-4000-8000-000000000013",
+        "byUserName": "support_cara",
+        "Comment": "What about HTML emails?",
+        "ParentKTopicId": "e1a1c1a1-0004-4000-8000-000000000004",
+        "ParentKTopicCommentId": "00000000-0000-0000-0000-000000000000",
+        "CreatedByUserID": "support_cara",
+        "CreatedAtUTC": "2025-07-04T11:00:00Z",
+        "LastUpdatedByUserID": "support_cara",
+        "LastUpdatedAtUTC": "2025-07-04T11:00:00Z"
+      }
+    ]
+  }  
+]
+
