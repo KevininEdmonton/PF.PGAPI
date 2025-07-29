@@ -18,16 +18,16 @@ namespace PFAPI.Controllers
     [Produces("application/json")]
     [ApiVersion("1.0")]
     [ApiController]   
-    public class HouseController : Microsoft.AspNetCore.Mvc.ControllerBase
+    public class BidController : Microsoft.AspNetCore.Mvc.ControllerBase
     {
         private readonly IPFClientRepository _repository;
         private readonly IMapper _mapper;
         //   private readonly LinkGenerator _linkGenerator;
-        private ILogger<HouseController> _logger;
+        private ILogger<BidController> _logger;
         private IConfiguration _config;
-        private string _curDataModelName = "House";
+        private string _curDataModelName = "Bid";
 
-        public HouseController(IMapper mapper, ILogger<HouseController> logger//, LinkGenerator linkGenerator
+        public BidController(IMapper mapper, ILogger<BidController> logger//, LinkGenerator linkGenerator
                                       , IConfiguration config)
         {
             //_repository = repository;
@@ -38,7 +38,7 @@ namespace PFAPI.Controllers
         }
 
         /// <summary>
-        /// Get a list of House Model
+        /// Get a list of Bid Model
         /// </summary>
         /// <param name="qp_page">Page number</param>
         /// <param name="qp_pagesize">Page size</param>
@@ -46,32 +46,26 @@ namespace PFAPI.Controllers
         /// <param name="qp_includeallchildrendata">Whether get all children data</param>
         /// <param name="qp_includedata">Specific children data that need to be get; one level lower only; split by [,]</param>
         /// <param name="qp_filter">Filter condition</param>
-        /// <returns>An ActionResult of PagedData for existing House Models</returns>
+        /// <returns>An ActionResult of PagedData for existing Bid Models</returns>
         //[Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
-        [HttpGet(Name = SystemStatics.Route_GetList_HousewPrice)]
+        [HttpGet("{houseId}", Name = SystemStatics.Route_GetList_Bid)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<House>>> GetList(int qp_page = PFAPIStatics.SYS_Default_QP_Page
-                                                                , int qp_pagesize = PFAPIStatics.SYS_Default_QP_Pagesize
-                                                                , string qp_orderby = PFAPIStatics.SYS_Default_QP_Orderby
-                                                                , bool qp_includeallchildrendata = PFAPIStatics.SYS_Default_QP_IncludeAllChildrenData
-                                                                , string qp_includedata = PFAPIStatics.SYS_Default_QP_IncludeData
-                                                                , string qp_filter = PFAPIStatics.SYS_Default_QP_Filter)
+        public async Task<ActionResult<IEnumerable<Bid>>> GetList(int houseId)
         {
             try
             {
-                HouseRepository theRepository = new HouseRepository();
-
-                var theResult = theRepository.GetAll();    //DataHelper.GetHouseList();
+                BidRepository theRepository = new BidRepository();
+                var theResult = theRepository.GetBids(houseId);
                 return Ok(theResult);
 
 
                 //QueryParameter theQueryParameter = new QueryParameter(qp_page, qp_pagesize, qp_orderby, qp_includeallchildrendata, qp_includedata, qp_filter
-                //                                                      , Url.Link(SystemStatics.Route_GetAll_HousewPrice, null));
+                //                                                      , Url.Link(SystemStatics.Route_GetAll_Bid, null));
                 ////CreateRepositoryInstance(User, _config, _mapper)
                 //using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
                 //{
-                //    var theResult = await _repository_clientdb.CreatePagedResults<House, House>(theQueryParameter);
+                //    var theResult = await _repository_clientdb.CreatePagedResults<Bid, Bid>(theQueryParameter);
                 //    return Ok(theResult);
                 //}
             }
@@ -83,10 +77,10 @@ namespace PFAPI.Controllers
         }
 
         /// <summary>
-        /// Create a new House Model
+        /// Create a new Bid Model
         /// </summary>
-        /// <param name="model">House Model to be created</param>
-        /// <returns>An ActionResult of newly created House Model</returns>
+        /// <param name="model">Bid Model to be created</param>
+        /// <returns>An ActionResult of newly created Bid Model</returns>
         /// <remarks>
         /// Sample request:
         ///     POST                         \
@@ -108,11 +102,11 @@ namespace PFAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity,
             Type = typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary))]
-        public async Task<ActionResult<House>> Post(House model)
+        public async Task<ActionResult<Bid>> Post(Bid model)
         {
             try
             {
-                HouseRepository theRepository = new HouseRepository();
+                BidRepository theRepository = new BidRepository();
                 theRepository.Add(model);
 
                 return Ok(model);
@@ -126,14 +120,14 @@ namespace PFAPI.Controllers
                 //    }
 
                 //    // Name should be Unique
-                //    //if (_repository_clientdb.GetExists<House>($"Name=='{model.Name}'"))
+                //    //if (_repository_clientdb.GetExists<Bid>($"Name=='{model.Name}'"))
                 //    //{
                 //    //    return BadRequest($"Name [{model.Name}] is in Use;");
                 //    //}
 
                 //    // Create new 
                 //    model.Id = Guid.Empty;
-                //    House entity = await MappingHelper.StarndardMap<House, House>(_repository_clientdb, _mapper, model, Guid.Empty);
+                //    Bid entity = await MappingHelper.StarndardMap<Bid, Bid>(_repository_clientdb, _mapper, model, Guid.Empty);
 
                 //    //regular operation
                 //    _repository_clientdb.Create(entity);
@@ -142,8 +136,8 @@ namespace PFAPI.Controllers
                 //        return this.StatusCode(StatusCodes.Status500InternalServerError, null);
                 //    }
 
-                //    var newUri = Url.Link(SystemStatics.Route_GetOne_HousewPrice, new { id = entity.Id });
-                //    return Created(newUri, _mapper.Map<House>(entity));
+                //    var newUri = Url.Link(SystemStatics.Route_GetOne_Bid, new { id = entity.Id });
+                //    return Created(newUri, _mapper.Map<Bid>(entity));
                 //}
             }
             catch (Exception e)
@@ -154,7 +148,7 @@ namespace PFAPI.Controllers
         }
 
         //   /// <summary>
-        //   /// Get a list of House Model
+        //   /// Get a list of Bid Model
         //   /// </summary>
         //   /// <param name="qp_page">Page number</param>
         //   /// <param name="qp_pagesize">Page size</param>
@@ -162,12 +156,12 @@ namespace PFAPI.Controllers
         //   /// <param name="qp_includeallchildrendata">Whether get all children data</param>
         //   /// <param name="qp_includedata">Specific children data that need to be get; one level lower only; split by [,]</param>
         //   /// <param name="qp_filter">Filter condition</param>
-        //   /// <returns>An ActionResult of PagedData for existing House Models</returns>
+        //   /// <returns>An ActionResult of PagedData for existing Bid Models</returns>
         ////   [Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
-        //   [HttpGet(Name = SystemStatics.Route_GetAll_HousewPrice)]
+        //   [HttpGet(Name = SystemStatics.Route_GetAll_Bid)]
         //   [ProducesResponseType(StatusCodes.Status200OK)]
         //   [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //   public async Task<ActionResult<PagedData<House>>> Get(int qp_page = PFAPIStatics.SYS_Default_QP_Page
+        //   public async Task<ActionResult<PagedData<Bid>>> Get(int qp_page = PFAPIStatics.SYS_Default_QP_Page
         //                                                           , int qp_pagesize = PFAPIStatics.SYS_Default_QP_Pagesize
         //                                                           , string qp_orderby = PFAPIStatics.SYS_Default_QP_Orderby
         //                                                           , bool qp_includeallchildrendata = PFAPIStatics.SYS_Default_QP_IncludeAllChildrenData
@@ -177,11 +171,11 @@ namespace PFAPI.Controllers
         //       try
         //       {
         //           QueryParameter theQueryParameter = new QueryParameter(qp_page, qp_pagesize, qp_orderby, qp_includeallchildrendata, qp_includedata, qp_filter
-        //                                                                 , Url.Link(SystemStatics.Route_GetAll_HousewPrice, null));
+        //                                                                 , Url.Link(SystemStatics.Route_GetAll_Bid, null));
         //           //CreateRepositoryInstance(User, _config, _mapper)
         //           using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
         //           {
-        //               var theResult = await _repository_clientdb.CreatePagedResults<House, House>(theQueryParameter);
+        //               var theResult = await _repository_clientdb.CreatePagedResults<Bid, Bid>(theQueryParameter);
         //               return Ok(theResult);
         //           }
         //       }
@@ -193,21 +187,21 @@ namespace PFAPI.Controllers
         //   }
 
         //   /// <summary>
-        //   /// Get one House Model
+        //   /// Get one Bid Model
         //   /// </summary>
-        //   /// <param name="id">House ID</param>
+        //   /// <param name="id">Bid ID</param>
         //   /// <param name="qp_includeallchildrendata">Whether get all children data</param>
         //   /// <param name="qp_includedata">Specific children data that need to be get; one level lower only; split by [,]</param>
-        //   /// <returns>An ActionResult of existing House Model</returns>
+        //   /// <returns>An ActionResult of existing Bid Model</returns>
         //   [Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
-        //   [HttpGet("{id}", Name = SystemStatics.Route_GetOne_HousewPrice)]
+        //   [HttpGet("{id}", Name = SystemStatics.Route_GetOne_Bid)]
         //   //[Consumes("application/json")]
         //   [ProducesResponseType(StatusCodes.Status200OK)]
         //   [ProducesResponseType(StatusCodes.Status400BadRequest)]
         //   [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         //   [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        //   public async Task<ActionResult<House>> Get(int id, bool qp_includeallchildrendata = PFAPIStatics.SYS_Default_QP_IncludeAllChildrenData
+        //   public async Task<ActionResult<Bid>> Get(int id, bool qp_includeallchildrendata = PFAPIStatics.SYS_Default_QP_IncludeAllChildrenData
         //                                                           , string qp_includedata = PFAPIStatics.SYS_Default_QP_IncludeData)
         //   {
         //       try
@@ -217,10 +211,10 @@ namespace PFAPI.Controllers
         //           // work with Client Database
         //           using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
         //           {
-        //               IQueryable<House> theQuery = _repository_clientdb.GetQueryable<House>();
+        //               IQueryable<Bid> theQuery = _repository_clientdb.GetQueryable<Bid>();
         //               theQuery = theQuery.Where(o => o.Id == id);
 
-        //               House theDataModel = await _repository_clientdb.GetOneDataModel<House, House>(theQueryParameter, theQuery);
+        //               Bid theDataModel = await _repository_clientdb.GetOneDataModel<Bid, Bid>(theQueryParameter, theQuery);
         //               if (theDataModel == null)
         //                   return NotFound();
 
@@ -238,11 +232,11 @@ namespace PFAPI.Controllers
 
 
         ///// <summary>
-        ///// Update a existing House Model
+        ///// Update a existing Bid Model
         ///// </summary>
-        ///// <param name="id">House ID</param>
-        ///// <param name="model">House Model to be updated</param>
-        ///// <returns>An ActionResult of updated House Model</returns>
+        ///// <param name="id">Bid ID</param>
+        ///// <param name="model">Bid Model to be updated</param>
+        ///// <returns>An ActionResult of updated Bid Model</returns>
         //////[HttpPatch("{id}")]
         //[Authorize(Policy4ModuleOperations.P_Admin.AdminManageOperation)]
         //[HttpPut("{id}")]
@@ -254,21 +248,21 @@ namespace PFAPI.Controllers
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         //[ProducesResponseType(StatusCodes.Status422UnprocessableEntity,
         //    Type = typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary))]
-        //public async Task<ActionResult<House>> Put(Guid id, House model)
+        //public async Task<ActionResult<Bid>> Put(Guid id, Bid model)
         //{
         //    try
         //    {
         //        // using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
         //        using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
         //        {
-        //            var existingentity = _repository_clientdb.GetById<House>(id);
+        //            var existingentity = _repository_clientdb.GetById<Bid>(id);
         //            if (existingentity == null) return NotFound($"Could not find {_curDataModelName} with id of {id}");
 
         //            if (model.Id != id)
         //                model.Id = id;
 
         //            //// Name should be Unique
-        //            //if (_repository_clientdb.GetExists<House>($"Name=='{model.Name}' and ID != GUID('{model.Id}')"))
+        //            //if (_repository_clientdb.GetExists<Bid>($"Name=='{model.Name}' and ID != GUID('{model.Id}')"))
         //            //{
         //            //    return BadRequest($"Name [{model.Name}] is in Use;");
         //            //}
@@ -279,14 +273,14 @@ namespace PFAPI.Controllers
         //                return BadRequest(msg);
         //            }
 
-        //            existingentity = await MappingHelper.StarndardMap<House, House>(_repository_clientdb, _mapper, model, id);
+        //            existingentity = await MappingHelper.StarndardMap<Bid, Bid>(_repository_clientdb, _mapper, model, id);
         //            if (existingentity == null) return BadRequest($"Failed to map {_curDataModelName} with id of {id}");
 
         //            if (!_repository_clientdb.HasChangesToDB())
         //            {
         //                if (_config["ValidationCheckOptions:Apply200ForNotModifiedRecord"].MeaningTrue())
         //                {
-        //                    return _mapper.Map<House>(existingentity);
+        //                    return _mapper.Map<Bid>(existingentity);
         //                }
         //                else
         //                {
@@ -295,7 +289,7 @@ namespace PFAPI.Controllers
         //            }
         //            if (await _repository_clientdb.SaveChangesAsync(this.User))
         //            {
-        //                return Ok(_mapper.Map<House>(existingentity));
+        //                return Ok(_mapper.Map<Bid>(existingentity));
         //            }
         //            return StatusCode(StatusCodes.Status304NotModified, model);
         //        }
@@ -313,9 +307,9 @@ namespace PFAPI.Controllers
         //}
 
         ///// <summary>
-        ///// Delete a existing House Model
+        ///// Delete a existing Bid Model
         ///// </summary>
-        ///// <param name="id">House ID</param>
+        ///// <param name="id">Bid ID</param>
         ///// <returns>An ActionResult</returns>
         //[Authorize(Policy4ModuleOperations.P_Admin.AdminManageOperation)]
         //[HttpDelete("{id}")]
@@ -330,7 +324,7 @@ namespace PFAPI.Controllers
         //        // using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(User, _config, _mapper))
         //        using (IPFClientRepository _repository_clientdb = PFClientRepository.CreateRepositoryInstance(_config, _mapper, Guid.Empty))
         //        {
-        //            var existingentity = _repository_clientdb.GetById<House>(id);
+        //            var existingentity = _repository_clientdb.GetById<Bid>(id);
         //            if (existingentity == null) return NotFound($"Could not find {_curDataModelName} with id of {id}");
 
         //            //delete schedule control

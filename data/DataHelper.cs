@@ -32,7 +32,7 @@ namespace PFAPI.utility
             }
         }
 
-        public static List<HousewPrice> GetHouseList(string fileName = "housetestdata.json")
+        public static List<House> GetHouseList(string fileName = "housetestdata.json")
         {
             try
             {
@@ -47,14 +47,14 @@ namespace PFAPI.utility
                     PropertyNameCaseInsensitive = true
                 };
 
-                List<HousewPrice>? datalist = JsonSerializer.Deserialize<List<HousewPrice>>(jsonString, options);
+                List<House>? datalist = JsonSerializer.Deserialize<List<House>>(jsonString, options);
 
-                return datalist ?? new List<HousewPrice>();
+                return datalist ?? new List<House>();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading KTopic data: {ex.Message}");
-                return new List<HousewPrice>();
+                return new List<House>();
             }
         }
     }

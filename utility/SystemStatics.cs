@@ -45,6 +45,10 @@ namespace PFAPI.utility
             , Route_GetAll_HousewPrice = "Route_GetAll_HousewPrice"
             , Route_GetOne_HousewPrice = "Route_GetOne_HousewPrice"
 
+            , Route_GetList_Bid = "Route_GetList_Bid"
+            , Route_GetAll_Bid =   "Route_GetAll_Bid"
+            , Route_GetOne_Bid =   "Route_GetOne_Bid"
+
             ;
         public const string SYS_Default_QP_Filter = "";
 
