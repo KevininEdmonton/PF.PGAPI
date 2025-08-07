@@ -99,7 +99,7 @@ namespace PFAPI.Controllers
         /// <response code="400">If the request/data is not valid</response>       
         /// <response code="500">If error happened at server side</response>
         /// <response code="422">If the provided data is not valid</response>               
-        [Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
+        //[Authorize(Policy4ModuleOperations.P_AccountAccessLevel.AccessLevel_EveryOne)]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
