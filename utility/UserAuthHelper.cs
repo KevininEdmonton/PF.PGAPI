@@ -150,7 +150,7 @@ namespace PFAPI.utility
                     return new Tuple<bool, bool, TokenModel, string>(false, true, null, "Invalid username or password.");
 
                 //Find Client DB name based on Center DB client account info/using
-//                using (IClientRepository _repository_clientdb = new ClientRepository(ClientDBHelper.GetClientDBContext(theClient.Id.ToString(), _config.GetConnectionString("HoBOCustomerConnectionString"), _config["Application:CustomerDBName"]), _config, _mapper, theClient.Id))
+                //using (IClientRepository _repository_clientdb = new ClientRepository(ClientDBHelper.GetClientDBContext(theClient.Id.ToString(), _config.GetConnectionString("HoBOCustomerConnectionString"), _config["Application:CustomerDBName"]), _config, _mapper, theClient.Id))
                 {
                     ZclientUser user = null;
 
