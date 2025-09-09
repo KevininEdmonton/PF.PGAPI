@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HoBO.API.SupportModels
+namespace PFAPI.SupportModels
 {
     public class ClientUserwithValidOperations
     {

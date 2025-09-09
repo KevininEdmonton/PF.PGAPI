@@ -3,7 +3,7 @@ using Azure;
 using Azure.Core;
 using DomainRepository.IRepositories;
 using DomainRepository.Repositories;
-using HoBO.API.SupportModels;
+using PFAPI.SupportModels;
 using K.Common;
 using KS.Library.EFDB;
 using KS.Library.Interface.PFAPI;
@@ -150,7 +150,7 @@ namespace PFAPI.utility
                     return new Tuple<bool, bool, TokenModel, string>(false, true, null, "Invalid username or password.");
 
                 //Find Client DB name based on Center DB client account info/using
-//                using (IHoBOClientRepository _repository_clientdb = new HoBOClientRepository(ClientDBHelper.GetClientDBContext(theClient.Id.ToString(), _config.GetConnectionString("HoBOCustomerConnectionString"), _config["Application:CustomerDBName"]), _config, _mapper, theClient.Id))
+//                using (IClientRepository _repository_clientdb = new ClientRepository(ClientDBHelper.GetClientDBContext(theClient.Id.ToString(), _config.GetConnectionString("HoBOCustomerConnectionString"), _config["Application:CustomerDBName"]), _config, _mapper, theClient.Id))
                 {
                     ZclientUser user = await _repository.GetZClientUserByUserNameAsync(model.UserName);
                     if (user == null)// create
