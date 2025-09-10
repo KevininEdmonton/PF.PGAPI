@@ -105,13 +105,13 @@ namespace PFAPI.Controllers
         /// <summary>
         /// Login API to get access token
         /// </summary>
-        /// <param name="model">UserName and Password</param>
+        /// <param name="model">UserName + Password</param>
         /// <returns>ActionResult of TokenModel</returns>
         /// <remarks>
         /// Sample request:
         ///     POST 
         ///     {
-        ///       "userName": "goodpeople@beautiful.world",
+        ///       "userName": "root@test.com",
         ///       "password": "password"
         ///     }
         /// </remarks>
